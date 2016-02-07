@@ -9,103 +9,128 @@ export class ReactTable extends Component {
     constructor(...args) {
         super(...args);
 
-        const {rowHeight, rows} = this.props;
-        const viewPortHeight = window.innerHeight;
-        const viewPortSize = Math.ceil(viewPortHeight / rowHeight);
-        this.scrollTop = 0;
-        this.state = {
-            viewPortHeight,
-            viewPortSize,
-            topIndex: 0,
-            bottomIndex: viewPortSize * 3 - 1
-        };
-        this.onScroll = this.onScroll.bind(this);
-    }
-
-    onScroll() {
         const {rowHeight} = this.props;
-        const {topIndex, bottomIndex, viewPortSize, viewPortHeight} = this.state;
-        const stateUpdate = {};
-        const scrollTop = window.scrollY;
-        const isScrollDown = scrollTop - this.scrollTop > 0;
+        this.viewPortHeight = window.innerHeight;
+        const viewPortSize = Math.ceil(this.viewPortHeight / rowHeight);
+        const topIndex = 0;
 
-        this.scrollTop = scrollTop;
+        this.state = {
+            viewPortSize,
+            topIndex,
+            bottomIndex: topIndex + viewPortSize * 3 - 1
+        };
 
-        //console.log(` scrollTop: ${scrollTop}, bottomIndex: ${bottomIndex},  bottomIndex * rowHeight: ${bottomIndex * rowHeight} `);
-
-        if (isScrollDown) {
-            if ((bottomIndex) * rowHeight <= scrollTop + viewPortHeight) {
-                stateUpdate.topIndex = this.calcNextTopIndex(isScrollDown);
-                stateUpdate.bottomIndex = this.calcNextBottomIndex(isScrollDown);
-                console.log(`indexes: ${stateUpdate.topIndex}, ${stateUpdate.bottomIndex}`);
-                this.setState(stateUpdate);
-            }
-        } else {
-            if ((topIndex) * rowHeight >= scrollTop) {
-                stateUpdate.topIndex = this.calcNextTopIndex(isScrollDown);
-                stateUpdate.bottomIndex = this.calcNextBottomIndex(isScrollDown);
-                console.log(`indexes: ${stateUpdate.topIndex}, ${stateUpdate.bottomIndex}`);
-                this.setState(stateUpdate);
-            }
-        }
+        this.onScroll = () => this.updateScroll(this.props);
+        this.onResize = this.updateSize.bind(this);
     }
 
-    calcNextBottomIndex(increase) {
-        const {rows: {length}} = this.props;
-        const {bottomIndex, viewPortSize} = this.state;
+    updateScroll(props) {
+        const {rowHeight, rows: {size}, infinityScroll} = props;
 
-        if (increase) {
-            if (bottomIndex + viewPortSize >= length - 1) {
-                return length - 1;
-            }
+        if (!infinityScroll) return;
 
-            return bottomIndex + viewPortSize;
-        } else {
-            if (bottomIndex - viewPortSize <= viewPortSize * 3 - 1) {
-                return viewPortSize * 3 - 1;
-            }
-
-            return bottomIndex - viewPortSize;
-        }
-    }
-
-    calcNextTopIndex(increase) {
-        const {rows: {length}} = this.props;
         const {topIndex, viewPortSize} = this.state;
+        const stateUpdate = {};
 
-        if (increase) {
-            if (topIndex + viewPortSize >= length - viewPortSize * 3) {
-                return length - viewPortSize * 3 - 1;
-            }
+        let scrollTop = this.calcScrollTop(props);
+        const index = Math.floor(scrollTop / rowHeight);
 
-            return topIndex + viewPortSize;
-        } else {
-            if (topIndex - viewPortSize <= 0) {
-                return 0;
-            }
-            return topIndex - viewPortSize;
+        if (topIndex > size - viewPortSize * 3) {
+            stateUpdate.topIndex = size - viewPortSize * 3;
+            stateUpdate.bottomIndex = stateUpdate.topIndex + viewPortSize * 3 - 1;
+            this.setState(stateUpdate);
+            return;
         }
+
+        console.log('index:', index, 'topIndex:', topIndex);
+        if (index - topIndex > viewPortSize) {
+            //console.log('------- scroll down --------');
+            stateUpdate.topIndex = index - viewPortSize;
+
+            if (stateUpdate.topIndex > size - viewPortSize * 3) {
+                stateUpdate.topIndex = size - viewPortSize * 3;
+            }
+        }
+
+        if (index - topIndex < viewPortSize) {
+            //console.log('------- scroll up --------');
+            stateUpdate.topIndex = index - viewPortSize;
+
+            if (stateUpdate.topIndex < 0) {
+                stateUpdate.topIndex = 0;
+            }
+        }
+
+        if (index - topIndex === viewPortSize) return;
+
+        stateUpdate.bottomIndex = stateUpdate.topIndex + viewPortSize * 3 - 1;
+        this.setState(stateUpdate);
+    }
+
+    updateSize() {
+        const {rowHeight} = this.props;
+        this.viewPortHeight = window.innerHeight;
+        const viewPortSize = Math.ceil(this.viewPortHeight / rowHeight);
+        console.log('Resize. viewPortSize:', viewPortSize);
+        this.setState({viewPortSize});
+    }
+
+    calcScrollTop({scrollType, tableStartOffset}) {
+        return scrollType === BODY_SCROLL ?
+            window.scrollY - tableStartOffset: this.refs.container.scrollTop;
+    }
+
+    componentWillMount() {
+        const {scrollType} = this.props;
+        if (scrollType === BODY_SCROLL) {
+            window.addEventListener('scroll', this.onScroll);
+        }
+
+        window.addEventListener('resize', this.onResize);
     }
 
     componentDidMount() {
-        window.addEventListener('scroll', this.onScroll);
-        //this.onScroll();
+        const {scrollType} = this.props;
+        if (scrollType === CONTAINER_SCROLL) {
+            this.refs.container.addEventListener('scroll', this.onScroll);
+        }
     }
 
     componentWillUnmount() {
         window.removeEventListener('scroll', this.onScroll);
+        this.refs.container.removeEventListener('scroll', this.onScroll);
+        window.removeEventListener('resize', this.onResize);
+    }
+    
+    shouldComponentUpdate() {
+        return true;
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.scrollType !== this.props.scrollType) {
+            if (nextProps.scrollType === BODY_SCROLL) {
+                this.refs.container.removeEventListener('scroll', this.onScroll);
+                window.addEventListener('scroll', this.onScroll);
+            } else {
+                window.removeEventListener('scroll', this.onScroll);
+                this.refs.container.addEventListener('scroll', this.onScroll);
+            }
+        }
+
+        this.updateScroll(nextProps);
     }
 
     render() {
-        const {className, containerClassName = ''} = this.props;
-        return <div className={containerClassName}>
+        const {className, scrollType} = this.props;
+        const containerClassName = scrollType === CONTAINER_SCROLL ? 'containerScroll' : '';
+        return <div className={containerClassName} ref="container">
             {this.renderTopPlaceholder()}
             <table className={cs(className, 'performance')}>
-               {/* <thead>
+                <thead>
                     <tr>
                         {this.renderHeader()}
                     </tr>
-                </thead>*/}
+                </thead>
                 <tbody>
                     {this.renderBody()}
                 </tbody>
@@ -122,23 +147,21 @@ export class ReactTable extends Component {
     }
 
     renderBody() {
-
-        const {rows, size, infinityScroll} = this.props;
+        const {rows, infinityScroll} = this.props;
         const lines = [];
 
         if (infinityScroll) {
             const {topIndex, bottomIndex} = this.state;
-            //console.log('render', topIndex, bottomIndex);
+            console.log('render', topIndex, bottomIndex);
 
-            for(let i = topIndex; i <= bottomIndex; i++) {
-                lines.push(this.renderRow(rows[i]));
+            for (let i = topIndex; i <= bottomIndex; i++) {
+                lines.push(this.renderRow(rows.get(i)));
             }
         } else {
-            for(let i = 0; i < size; i++) {
-                lines.push(this.renderRow(rows[i]));
+            for (let i = 0; i < rows.size; i++) {
+                lines.push(this.renderRow(rows.get(i)));
             }
         }
-
 
         return lines;
     }
@@ -166,18 +189,23 @@ export class ReactTable extends Component {
     }
 
     renderTopPlaceholder() {
-        const {rowHeight} = this.props;
+        const {rowHeight, infinityScroll} = this.props;
         const {topIndex} = this.state;
+
+        if (!infinityScroll) return null;
+
         const height = topIndex * rowHeight;
-        //console.log(`top placeholder: ${topIndex}, ${height}px`);
         return <div style={{height}}></div>;
     }
 
 
     renderBottomPlaceholder() {
-        const {rowHeight, rows} = this.props;
+        const {rowHeight, rows, infinityScroll} = this.props;
         const {bottomIndex} = this.state;
-        const height = (rows.length - bottomIndex - 1) * rowHeight;
+
+        if (!infinityScroll) return null;
+
+        const height = (rows.size - bottomIndex - 1) * rowHeight;
         return <div style={{height}}></div>;
     }
 }

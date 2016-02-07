@@ -1,7 +1,7 @@
 'use strict';
 require('babel/register');
 const faker = require('faker');
-const size = 50000;
+const size = 20000;
 
 const write = process.stdout.write.bind(process.stdout);
 

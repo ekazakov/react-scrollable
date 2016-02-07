@@ -7,7 +7,8 @@ export const CONTAINER_SCROLL = "CONTAINER_SCROLL";
 export class OptionsPanel extends Component {
     static defaultProps = {
         onScrollTypeChange: _.noop,
-        onDataSizeChange: _.noop
+        onDataSizeChange: _.noop,
+        onInfinityScrollChange: _.noop
     };
 
     constructor(...args) {
@@ -15,10 +16,17 @@ export class OptionsPanel extends Component {
 
         this.state = {
             size: this.props.size,
-            scrollType: this.props.scrollType
+            scrollType: this.props.scrollType,
+            infinityScroll: this.props.infinityScroll
         };
 
         this._onDataSizeChange = _.debounce(this.props.onDataSizeChange, 300);
+    }
+
+    onInfinityScrollChange(e) {
+        const onRender = () =>
+            _.delay(() => this.props.onInfinityScrollChange(e.target.checked), 100);
+        this.setState({infinityScroll: e.target.checked}, onRender);
     }
 
     onScrollTypeChange(e) {
@@ -53,6 +61,15 @@ export class OptionsPanel extends Component {
                            onChange={this.onScrollTypeChange.bind(this)}/> container
                 </label>
             </div>
+
+            <div style={{marginTop: 10}}>
+                <label>
+                    <input type="checkbox"
+                           onChange={this.onInfinityScrollChange.bind(this)}
+                           checked={this.state.infinityScroll}/> infinity scroll
+                </label>
+            </div>
+
             <h4>Data size</h4>
             <div>
                 {this.props.min/1000}k
@@ -65,6 +82,7 @@ export class OptionsPanel extends Component {
                        onChange={this.onDataSizeChange.bind(this)}/>
                 {this.props.max/1000}k
             </div>
+
             <div style={{marginTop: 10}}>
                 size: {this.state.size / 1000}k
             </div>
