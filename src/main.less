@@ -1,0 +1,96 @@
+html, body {
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#root {
+  //margin: 20px;
+}
+
+.containerScroll {
+  overflow: auto;
+  min-height: 300px;
+  max-height: 800px;
+  background-color: #073542;
+  box-shadow: inset 0px 0px 3px 3px rgba(0, 0, 0, 0.15);
+  max-width: 1400px;
+  padding: 0 10px;
+}
+
+.controlsPanel {
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  padding: 15px;
+  width: 200px;
+  background-color: rgba(7, 69, 86, 0.7);
+  color: #F9F9F9;
+
+  font-size: 12px;
+
+  h4 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+}
+
+.dataSizeRange {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 10px;
+}
+
+.performance {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.fixedTable {
+  //backface-visibility: hidden;
+  //-webkit-backface-visibility: hidden;
+  //transform: translateZ(0);
+  border: none;
+  width: calc(80px + 200px + 300px + 180px + 300px);
+  border-collapse: collapse;
+
+  td, th {
+    border: none;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  td {
+    height: 40px;
+  }
+
+  tbody {
+    tr:nth-of-type(2n) {
+      td {
+        background-color: #0D4150;
+        //box-shadow: 1px 2px 1px 0px rgba(0, 0, 0, 0.22);
+      }
+    }
+  }
+}
+
+.index {
+  width: 80px;
+}
+
+.name {
+  width: 200px;
+}
+
+.address {
+  width: 300px;
+}
+
+.phone {
+  width: 180px;
+}
+
+.email {
+  width: 300px;
+}

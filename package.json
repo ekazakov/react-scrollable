@@ -1,0 +1,31 @@
+{
+  "name": "catcher",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babel-loader": "^5.4.0",
+    "css-loader": "^0.23.1",
+    "faker": "^3.0.1",
+    "immutable": "^3.7.6",
+    "json-loader": "^0.5.4",
+    "less": "^2.6.0",
+    "less-loader": "^2.2.2",
+    "react-hot-loader": "^1.3.0",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1"
+  },
+  "dependencies": {
+    "bem-cn": "^1.2.1",
+    "classnames": "^2.2.3",
+    "lodash": "^4.2.1",
+    "ramda": "^0.19.1",
+    "react": "0.14.0",
+    "react-dom": "0.14.0",
+    "whatwg-fetch": "^0.11.0"
+  }
+}
