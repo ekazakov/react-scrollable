@@ -20,7 +20,7 @@ export class ReactTable extends Component {
             bottomIndex: topIndex + viewPortSize * 3 - 1
         };
 
-        this.onScroll = () => this.updateScroll(this.props);
+        this.onScroll = _.debounce(() => this.updateScroll(this.props), 0);
         this.onResize = this.updateSize.bind(this);
     }
 
@@ -42,7 +42,7 @@ export class ReactTable extends Component {
             return;
         }
 
-        console.log('index:', index, 'topIndex:', topIndex);
+        //console.log('index:', index, 'topIndex:', topIndex);
         if (index - topIndex > viewPortSize) {
             //console.log('------- scroll down --------');
             stateUpdate.topIndex = index - viewPortSize;

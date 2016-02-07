@@ -11,13 +11,13 @@ module.exports = {
     //],
     entry: {
         'static-table': [
-            'webpack-dev-server/client?http://localhost:3000',
+            'webpack-dev-server/client?http://0.0.0.0:3000',
             'webpack/hot/only-dev-server',
             './src/static-table'
         ],
 
         'react-table': [
-            'webpack-dev-server/client?http://localhost:3000',
+            'webpack-dev-server/client?http://0.0.0.0:3000',
             'webpack/hot/only-dev-server',
             './src/react-table'
         ],
@@ -50,7 +50,7 @@ module.exports = {
     },
 
     devServer: {
-        host: 'localhost',
+        host: '0.0.0.0',
         port: '3000',
         hot: true,
         contentBase: path.join(__dirname, '/static')
