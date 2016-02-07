@@ -18,7 +18,7 @@ module.exports = {
 
         'react-table': [
             'webpack-dev-server/client?http://0.0.0.0:3000',
-            'webpack/hot/only-dev-server',
+            //'webpack/hot/only-dev-server',
             './src/react-table'
         ],
     },
@@ -52,7 +52,7 @@ module.exports = {
     devServer: {
         host: '0.0.0.0',
         port: '3000',
-        hot: true,
+        hot: false,
         contentBase: path.join(__dirname, '/static')
     }
 };

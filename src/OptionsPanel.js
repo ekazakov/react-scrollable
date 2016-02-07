@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
+//import _ from 'lodash';
+import debounce from 'lodash.debounce';
+import delay from 'lodash.delay';
 
 export const BODY_SCROLL = "BODY_SCROLL";
 export const CONTAINER_SCROLL = "CONTAINER_SCROLL";
-
+function noop() {}
 export class OptionsPanel extends Component {
     static defaultProps = {
-        onScrollTypeChange: _.noop,
-        onDataSizeChange: _.noop,
-        onInfinityScrollChange: _.noop
+        onScrollTypeChange: noop,
+        onDataSizeChange: noop,
+        onInfinityScrollChange: noop
     };
 
     constructor(...args) {
@@ -20,18 +22,18 @@ export class OptionsPanel extends Component {
             infinityScroll: this.props.infinityScroll
         };
 
-        this._onDataSizeChange = _.debounce(this.props.onDataSizeChange, 300);
+        this._onDataSizeChange = debounce(this.props.onDataSizeChange, 300);
     }
 
     onInfinityScrollChange(e) {
         const onRender = () =>
-            _.delay(() => this.props.onInfinityScrollChange(e.target.checked), 100);
+            delay(() => this.props.onInfinityScrollChange(e.target.checked), 100);
         this.setState({infinityScroll: e.target.checked}, onRender);
     }
 
     onScrollTypeChange(e) {
         const onRender = () =>
-            _.delay(() => this.props.onScrollTypeChange(e.target.value), 100);
+            delay(() => this.props.onScrollTypeChange(e.target.value), 100);
         this.setState({scrollType: e.target.value}, onRender);
     }
 

@@ -1,4 +1,5 @@
-import 'babel-core/polyfill';
+//import 'babel-core/polyfill';
+require('es6-object-assign').polyfill();
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {fromJS} from 'immutable';
@@ -21,11 +22,11 @@ function calculateAbsoluteTopOffset(elem) {
 const columns = ['#', 'name', 'address', 'phone', 'email'];
 
 const panelConfig = {
-    size: 1000,
+    size: 8000,
     minSize: 1000,
     maxSize: stubs.length,
     scrollType: BODY_SCROLL,
-    infinityScroll: false,
+    infinityScroll: true,
     onScrollTypeChange,
     onDataSizeChange,
     onInfinityScrollChange
