@@ -72,15 +72,15 @@ export class OptionsPanel extends Component {
 
             <h4>Data size</h4>
             <div>
-                {this.props.min/1000}k
+                {this.props.minSize/1000}k
                 <input type="range"
                        className="dataSizeRange"
-                       min={this.props.min}
-                       max={this.props.max}
+                       min={this.props.minSize}
+                       max={this.props.maxSize}
                        step="1000"
                        value={this.state.size}
                        onChange={this.onDataSizeChange.bind(this)}/>
-                {this.props.max/1000}k
+                {this.props.maxSize/1000}k
             </div>
 
             <div style={{marginTop: 10}}>

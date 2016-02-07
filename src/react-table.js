@@ -21,8 +21,8 @@ const columns = ['#', 'name', 'address', 'phone', 'email'];
 
 const panelConfig = {
     size: 1000,
-    min: 1000,
-    max: stubs.length,
+    minSize: 1000,
+    maxSize: stubs.length,
     scrollType: BODY_SCROLL,
     infinityScroll: false,
     onScrollTypeChange,

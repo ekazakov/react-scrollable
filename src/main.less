@@ -10,18 +10,20 @@ h1 {
 
 #root {
   margin: 20px;
-  margin-top: 200px;
-  margin-bottom: 200px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .containerScroll {
   overflow: auto;
-  min-height: 300px;
-  max-height: 800px;
+
   background-color: #073542;
   box-shadow: inset 0px 0px 3px 3px rgba(0, 0, 0, 0.15);
   max-width: 1400px;
   padding: 0 10px;
+
+  min-height: 600px;
+  max-height: ~"calc(100% - 40px - 59px)";
 }
 
 .controlsPanel {
