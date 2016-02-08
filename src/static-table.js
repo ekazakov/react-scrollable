@@ -17,8 +17,8 @@ const rows = stubs.map(stub => new Card(stub));
 
 const panelConfig = {
     size: 1000,
-    min: 1000,
-    max: rows.length,
+    minSize: 1000,
+    maxSize: rows.length,
     scrollType: BODY_SCROLL,
     onScrollTypeChange,
     onDataSizeChange

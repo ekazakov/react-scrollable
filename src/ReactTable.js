@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce';
 export const BODY_SCROLL = "BODY_SCROLL";
 export const CONTAINER_SCROLL = "CONTAINER_SCROLL";
 
-const buffer = 10;
+const buffer = 4;
 export class ReactTable extends Component {
     constructor(...args) {
         super(...args);
@@ -18,9 +18,9 @@ export class ReactTable extends Component {
 
         this.state = {viewPortSize, topIndex};
         this.state.bottomIndex = topIndex + this.calcFullViewPortSize() - 1;
-        this.onScroll = debounce(() =>  this.updateScroll(this.props), 50);
+        this.onScroll = () =>  this.updateScroll(this.props);
         this.onResize = this.updateSize.bind(this);
-        this.scrollTime = Date.now();
+
     }
 
     calcFullViewPortSize() {
@@ -28,12 +28,6 @@ export class ReactTable extends Component {
     }
 
     updateScroll(props) {
-        const time =  Date.now();
-        const _delay = (time - this.scrollTime) / 1000;
-
-        this.scrollTime = time;
-        //console.log(`delay beetwen scroll events: ${_delay}`);
-
         const {rowHeight, rows: {size}, infinityScroll} = props;
 
         if (!infinityScroll) return;
@@ -48,36 +42,38 @@ export class ReactTable extends Component {
         let scrollTop = this.calcScrollTop(props);
         const index = Math.floor(scrollTop / rowHeight);
 
-        if (topIndex > size - this.calcFullViewPortSize()) {
-            stateUpdate.topIndex = size - this.calcFullViewPortSize();
+        const isDown = scrollTop - this.prevScrollTop > 0;
+        this.prevScrollTop = scrollTop;
 
-            updateState();
-            return;
-        }
-
-        //console.log('index:', index, 'topIndex:', topIndex);
-        if (index - topIndex > buffer * viewPortSize) {
-            console.log('------- scroll down --------');
-            stateUpdate.topIndex = index - buffer * viewPortSize / 2;
-
-            if (stateUpdate.topIndex > size - this.calcFullViewPortSize()) {
+        if (isDown) {
+            if (topIndex > size - this.calcFullViewPortSize()) {
                 stateUpdate.topIndex = size - this.calcFullViewPortSize();
+
+                updateState();
+                return;
+            }
+
+            //console.log('index:', index, 'topIndex:', topIndex);
+            if (index - topIndex > buffer * viewPortSize) {
+                console.log('------- scroll down --------');
+                stateUpdate.topIndex = index - buffer * viewPortSize;
+
+                if (stateUpdate.topIndex > size - this.calcFullViewPortSize()) {
+                    stateUpdate.topIndex = size - this.calcFullViewPortSize();
+                }
+
+                updateState();
+            }
+        } else if (index - topIndex < buffer * viewPortSize) {
+            console.log('------- scroll up --------');
+            stateUpdate.topIndex = index - buffer * viewPortSize;
+
+            if (stateUpdate.topIndex < 0) {
+                stateUpdate.topIndex = 0;
             }
 
             updateState();
-            return;
         }
-
-        //if (index - topIndex < buffer * viewPortSize) {
-        //    console.log('------- scroll up --------');
-        //    stateUpdate.topIndex = index - buffer * viewPortSize / 2;
-        //
-        //    if (stateUpdate.topIndex < 0) {
-        //        stateUpdate.topIndex = 0;
-        //    }
-        //
-        //    updateState();
-        //}
 
     }
 
@@ -109,6 +105,8 @@ export class ReactTable extends Component {
         if (scrollType === CONTAINER_SCROLL) {
             this.refs.container.addEventListener('scroll', this.onScroll);
         }
+
+        this.prevScrollTop = this.calcScrollTop(this.props);
     }
 
     componentWillUnmount() {
@@ -116,7 +114,7 @@ export class ReactTable extends Component {
         this.refs.container.removeEventListener('scroll', this.onScroll);
         window.removeEventListener('resize', this.onResize);
     }
-    
+
     shouldComponentUpdate() {
         return true;
     }
