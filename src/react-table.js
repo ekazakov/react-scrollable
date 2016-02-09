@@ -1,4 +1,4 @@
-//import 'babel-core/polyfill';
+//import 'babel-polyfill';
 require('es6-object-assign').polyfill();
 import React from 'react';
 import ReactDOM from 'react-dom';
