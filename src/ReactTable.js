@@ -115,11 +115,17 @@ export class ReactTable extends Component {
         window.removeEventListener('resize', this.onResize);
     }
 
+    componentWillUpdate() {
+        console.log('componentWillUpdate');
+    }
+
     shouldComponentUpdate() {
+        console.log('shouldComponentUpdate');
         return true;
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log('componentWillReceiveProps');
         if (nextProps.scrollType !== this.props.scrollType) {
             if (nextProps.scrollType === BODY_SCROLL) {
                 this.refs.container.removeEventListener('scroll', this.onScroll);
