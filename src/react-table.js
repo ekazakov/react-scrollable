@@ -41,6 +41,7 @@ const tableConfig = {
     scrollType: panelConfig.scrollType,
     rows: rows.slice(0, panelConfig.size),
     className: 'fixedTable',
+    buffer: 2,
     columns,
     tableStartOffset
 };

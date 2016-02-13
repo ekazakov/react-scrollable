@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "webpack-dev-server",
-    "test": "mocha --compilers js:babel-core/register"
+    "test": "mocha --compilers js:babel-core/register --watch",
+    "test-debug": "devtool  ./node_modules/mocha/bin/_mocha  -c --watch  --no-timeouts"
   },
   "license": "MIT",
   "devDependencies": {
@@ -31,6 +32,7 @@
     "bem-cn": "^1.2.1",
     "classnames": "^2.2.3",
     "es6-object-assign": "^1.0.1",
+    "is-equal": "^1.4.2",
     "lodash": "^4.2.1",
     "lodash.debounce": "^4.0.1",
     "lodash.delay": "^4.0.1",
