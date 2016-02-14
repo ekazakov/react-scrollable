@@ -172,7 +172,7 @@ describe('Scroller suite', function () {
     });
 
     it(`should correctly rerender on viewport size change`, function() {
-        const tree = sd.shallowRender(<Scroller {...options}>
+        const tree = sd.shallowRender(<Scroller {...scrollerOptions}>
             <TableRowsSet rows={rows}/>
         </Scroller>);
         const options = {...scrollerOptions, viewPortHeight: 80};
@@ -185,6 +185,7 @@ describe('Scroller suite', function () {
 
         expect(tableRows.length).toEqual(16);
     });
+
     it.skip(`should correctly render with offset from page top`);
 
 });

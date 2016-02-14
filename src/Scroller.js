@@ -1,24 +1,36 @@
-import React, { Component, Children, cloneElement} from 'react';
+import React, { Component, Children, cloneElement, PropTypes} from 'react';
 
 import deepEqual from 'is-equal';
-import cs from 'classnames';
-import debounce from 'lodash.debounce';
 import reducer from './scrollerReducer';
 import {BODY_SCROLL, CONTAINER_SCROLL} from './scrollConstants';
 
 const {max, min, ceil} = Math;
 
 export class Scroller extends Component {
+    static propTypes = {
+        rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+        size: PropTypes.number.isRequired,
+        scrollTop: PropTypes.number.isRequired,
+        viewPortHeight: PropTypes.number.isRequired,
+        scrollType: PropTypes.oneOf([BODY_SCROLL, CONTAINER_SCROLL]),
+        tableStartOffset: PropTypes.number,
+        buffer: PropTypes.number
+    };
+
+    static defaultProps = {
+        tableStartOffset: 0,
+        buffer: 1,
+        scrollType: BODY_SCROLL
+    };
+
     constructor(...args) {
         super(...args);
 
-        const {viewPortHeight} = this.props;
-        const offsetTopIndex = 0;
-        this.state = {viewPortHeight, offsetTopIndex};
+        this.state = {offsetTopIndex: 0};
     }
 
     _onScroll(props) {
-        const {rowHeight, size, viewPortHeight} = props;
+        const {rowHeight, size} = props;
 
         const stateUpdate = reducer({
             rowHeight,
@@ -26,8 +38,6 @@ export class Scroller extends Component {
             scrollTop: this._calcScrollTop(props),
             offsetTopIndex: this.state.offsetTopIndex
         });
-
-        stateUpdate.viewPortHeight = viewPortHeight;
 
         this.setState(stateUpdate);
     }
@@ -38,10 +48,6 @@ export class Scroller extends Component {
 
     componentWillMount() {
         this._onScroll(this.props);
-    }
-
-    componentWillUpdate() {
-        this.debouncedUpdateSize = debounce(() => this._updateSize(), 100);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -58,20 +64,20 @@ export class Scroller extends Component {
         const finalStyle = {...containerStyle, ...style};
 
         return <div className={className} style={finalStyle}>
-            <div style={{height: this._topPlaceholderHeight()}} className="Scroller__TopPlaceholder"></div>;
+            <div style={{height: this._topPlaceholderHeight()}} className="Scroller__TopPlaceholder"></div>
             {this._renderBody()}
-            <div style={{height: this._bottomPlaceholderHeight()}} className="Scroller__BottomPlaceholder"></div>;
+            <div style={{height: this._bottomPlaceholderHeight()}} className="Scroller__BottomPlaceholder"></div>
         </div>;
     }
 
     _renderBody() {
-        const {size, buffer, rowHeight} = this.props;
-        const {offsetTopIndex, viewPortHeight} = this.state;
+        const {size, buffer, rowHeight, viewPortHeight} = this.props;
+        const {offsetTopIndex} = this.state;
         const viewPortSize = ceil(viewPortHeight / rowHeight);
         const from = max(offsetTopIndex - viewPortSize * buffer, 0);
         const to = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, size);
-        //console.log({offsetTopIndex, viewPortHeight, viewPortSize, buffer, offsetTopIndex, size});
-        //console.log({from, to});
+        console.log({offsetTopIndex, viewPortHeight, viewPortSize, buffer, offsetTopIndex, size});
+        console.log({from, to});
 
         return Children.map(
             this.props.children,
@@ -79,16 +85,16 @@ export class Scroller extends Component {
     }
 
     _topPlaceholderHeight() {
-        const {rowHeight, buffer} = this.props;
-        const {offsetTopIndex, viewPortHeight} = this.state;
+        const {rowHeight, buffer, viewPortHeight} = this.props;
+        const {offsetTopIndex} = this.state;
         const viewPortSize = ceil(viewPortHeight / rowHeight);
         const index = max(offsetTopIndex - viewPortSize * buffer, 0);
         return  (index) * rowHeight;
     }
 
     _bottomPlaceholderHeight() {
-        const {rowHeight, size, buffer} = this.props;
-        const {offsetTopIndex, viewPortHeight} = this.state;
+        const {rowHeight, size, buffer, viewPortHeight} = this.props;
+        const {offsetTopIndex} = this.state;
         const viewPortSize = ceil(viewPortHeight / rowHeight);
         const index = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, size);
         return (size - index) * rowHeight;

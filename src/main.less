@@ -55,13 +55,16 @@ h1 {
   transform: translateZ(0);
 }
 
-.fixedTable {
+.fixedTable, .containerScroll {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform: translateZ(0);
-  border: none;
-  width: calc(80px + 200px + 300px + 180px + 300px);
-  border-collapse: collapse;
+
+  table {
+    border: none;
+    width: calc(80px + 200px + 300px + 180px + 300px);
+    border-collapse: collapse;
+  }
 
   td, th {
     border: none;

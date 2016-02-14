@@ -26,20 +26,23 @@ export class OptionsPanel extends Component {
     }
 
     onInfinityScrollChange(e) {
+        const checked = e.target.checked;
         const onRender = () =>
-            delay(() => this.props.onInfinityScrollChange(e.target.checked), 100);
-        this.setState({infinityScroll: e.target.checked}, onRender);
+            delay(() => this.props.onInfinityScrollChange(checked), 100);
+        this.setState({infinityScroll: checked}, onRender);
     }
 
     onScrollTypeChange(e) {
+        const value = e.target.value;
         const onRender = () =>
-            delay(() => this.props.onScrollTypeChange(e.target.value), 100);
-        this.setState({scrollType: e.target.value}, onRender);
+            delay(() => this.props.onScrollTypeChange(value), 100);
+        this.setState({scrollType: value}, onRender);
     }
 
     onDataSizeChange(e) {
-        const onRender = () => this._onDataSizeChange(e.target.value);
-        this.setState({size: e.target.value}, onRender);
+        const value = e.target.value;
+        const onRender = () => this._onDataSizeChange(value);
+        this.setState({size: value}, onRender);
     }
 
     render() {
