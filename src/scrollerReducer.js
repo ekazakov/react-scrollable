@@ -1,4 +1,4 @@
-module.exports = function scrollerReducer(params) {
+export default function scrollerReducer(params) {
     const {rowHeight, size, scrollTop, offsetTopIndex:topIndex} = params;
     const {floor, abs, min} = Math;
 

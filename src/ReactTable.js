@@ -22,7 +22,6 @@ export class ReactTable extends Component {
         this.debouncedUpdateSize = debounce(() => this.updateSize(), 100);
     }
 
-
     _onResize() {
         this.debouncedUpdateSize();
     }
@@ -46,14 +45,14 @@ export class ReactTable extends Component {
     _updateSize() {
         const {rowHeight, scrollType} = this.props;
         const viewPortHeight =  scrollType === BODY_SCROLL ? window.innerHeight : this.refs.container.offsetHeight;
-        const viewPortSize = Math.ceil(viewPortHeight / rowHeight);
-        console.log(`Resize: viewPortHeight: ${viewPortHeight} viewPortSize: ${viewPortSize}`);
+        //const viewPortSize = Math.ceil(viewPortHeight / rowHeight);
+        //console.log(`Resize: viewPortHeight: ${viewPortHeight} viewPortSize: ${viewPortSize}`);
         this.setState({viewPortHeight});
     }
 
     _calcScrollTop({scrollType, tableStartOffset}) {
         return scrollType === BODY_SCROLL ?
-            Math.max(window.scrollY - tableStartOffset, 0): this.refs.container.scrollTop;
+            Math.max(window.pageYOffset - tableStartOffset, 0): this.refs.container.scrollTop;
     }
 
     componentDidMount() {
@@ -122,7 +121,7 @@ export class ReactTable extends Component {
 
             const from = max(offsetTopIndex - viewPortSize * buffer, 0);
             const to = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, rows.size);
-            console.log(`%c >>>>> render ${offsetTopIndex} from: ${from}, to: ${to}`, "font-weight: bold; color: #000");
+            //console.log(`%c >>>>> render ${offsetTopIndex} from: ${from}, to: ${to}`, "font-weight: bold; color: #000");
 
             for (let i = from; i < to; i++) {
                 lines.push(this._renderRow(rows.get(i)));

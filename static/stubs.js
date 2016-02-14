@@ -1,4 +1,5 @@
-var stubs = [{"id":0,"name":"Simeon Crooks","address":"Graham Prairie, Walter view","phone":"121.269.4349 x45328","email":"Gus_Fahey@hotmail.com","website":"eryn.biz","company":"Hammes - Mohr"},
+var stubs = [
+{"id":0,"name":"Simeon Crooks","address":"Graham Prairie, Walter view","phone":"121.269.4349 x45328","email":"Gus_Fahey@hotmail.com","website":"eryn.biz","company":"Hammes - Mohr"},
 {"id":1,"name":"Ron Nienow","address":"Jada Cape, South Arielle side","phone":"229-636-7782","email":"Isom_Dickinson@yahoo.com","website":"branson.net","company":"Leffler Group"},
 {"id":2,"name":"Modesto Blanda","address":"Carolyn Gateway, Reichert view","phone":"1-176-698-4946 x376","email":"Adelia.Nader86@yahoo.com","website":"kelley.info","company":"Bailey, Greenholt and Medhurst"},
 {"id":3,"name":"Dahlia Goyette","address":"Beer Ways, Carlos side","phone":"894-917-1203 x884","email":"Bobby47@hotmail.com","website":"delphia.biz","company":"Williamson, Ankunding and Veum"},

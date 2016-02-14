@@ -1,0 +1,2 @@
+export const BODY_SCROLL = "BODY_SCROLL";
+export const CONTAINER_SCROLL = "CONTAINER_SCROLL";
