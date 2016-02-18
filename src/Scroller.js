@@ -38,10 +38,10 @@ export class Scroller extends Component {
 
         const {rowHeight} = this.props;
         if (isFunction(rowHeight)) {
-            const rows = Array.from(
+            this.rows = Array.from(
                 Array(this.props.size), (_, index) => rowHeight(index));
 
-            this.rowOffsets = calcRowOffsets(rows);
+            this.rowOffsets = calcRowOffsets(this.rows);
 
         }
 
@@ -52,7 +52,7 @@ export class Scroller extends Component {
         const {size, rowHeight} = props;
 
         const stateUpdate = this._update({
-            rowHeight: props.rowHeight,
+            rowHeight,
             size,
             scrollTop: this._calcScrollTop(props),
             offsetTopIndex: this.state.offsetTopIndex
@@ -74,7 +74,7 @@ export class Scroller extends Component {
                 }
             }
         } else {
-            console.log(rowHeight);
+            //console.log(rowHeight);
             offsetTopIndex = min(floor(scrollTop / rowHeight), size)
         }
 
@@ -120,34 +120,68 @@ export class Scroller extends Component {
         let from, to;
 
         if (isFunction(rowHeight)) {
+            from = this._calcFromIndex();
+            to = this._calcToIndex();
+        } else {
             const viewPortSize = ceil(viewPortHeight / rowHeight);
             from = max(offsetTopIndex - viewPortSize * buffer, 0);
             to = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, size);
-        } else {
 
         }
 
-        //console.log({offsetTopIndex, viewPortHeight, viewPortSize, buffer, offsetTopIndex, size});
-        //console.log({from, to});
+        //console.log({offsetTopIndex, viewPortHeight,  buffer, offsetTopIndex, size});
+        //console.log({from, to, buffer});
 
         return Children.map(
             this.props.children,
             (child) => cloneElement(child, {from, to}, child.props.children));
     }
 
-    _topPlaceholderHeight() {
-        const {buffer, viewPortHeight} = this.props;
-        const rowHeight = result(this.props, 'rowHeight');
+    _calcFromIndex() {
         const {offsetTopIndex} = this.state;
+        return offsetTopIndex;
+    }
+
+    _calcToIndex() {
+        const {size, buffer, viewPortHeight} = this.props;
+        const {offsetTopIndex} = this.state;
+        let to;
+        let diff = viewPortHeight + viewPortHeight * buffer;
+
+        for(to = offsetTopIndex; to < size; to++) {
+            diff -= this.rows[to];
+
+            if (diff <= 0) break;
+        }
+
+        //console.log('diff:', diff);
+
+        to += 1;
+        return to;
+    }
+
+    _topPlaceholderHeight() {
+        const {buffer, viewPortHeight, rowHeight} = this.props;
+        const {offsetTopIndex} = this.state;
+
+        if (isFunction(rowHeight)) {
+            return 0;
+        }
+
         const viewPortSize = ceil(viewPortHeight / rowHeight);
         const index = max(offsetTopIndex - viewPortSize * buffer, 0);
         return  (index) * rowHeight;
     }
 
     _bottomPlaceholderHeight() {
-        const { size, buffer, viewPortHeight} = this.props;
-        const rowHeight = result(this.props, 'rowHeight');
+        const { size, buffer, viewPortHeight, rowHeight} = this.props;
         const {offsetTopIndex} = this.state;
+
+        if (isFunction(rowHeight)) {
+            const to = this._calcToIndex();
+            return this.rowOffsets[size - 1] - this.rowOffsets[to - 1];
+        }
+
         const viewPortSize = ceil(viewPortHeight / rowHeight);
         const index = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, size);
         return (size - index) * rowHeight;

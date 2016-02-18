@@ -122,7 +122,7 @@ describe('Scroller suite', function () {
 
         const tableRowsSet = scroller.dive(['TableRowsSet']);
         expect(tableRowsSet).toExist();
-        
+
         const trs = tableRowsSet.everySubTree('TableRow');
         expect(trs.length).toBe(28);
     });
@@ -188,7 +188,7 @@ describe('Scroller suite', function () {
         expect(tableRows.length).toEqual(16);
     });
 
-    it.skip(`should correctly render with offset from page top`);
+    it(`should correctly render with offset from page top`);
 
     it(`should support rowHeight as function`, function () {
         const rowHeight = (index) => 10;
@@ -199,7 +199,7 @@ describe('Scroller suite', function () {
         </Scroller>);
         const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
 
-        expect(tableRows.length).toEqual(28);
+        expect(tableRows.length).toEqual(27);
     });
 
     it(`should support rows with different height`, function () {
@@ -211,5 +211,20 @@ describe('Scroller suite', function () {
         const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
 
         expect(tableRows.length).toEqual(11);
+    });
+
+    it(`should correctly calculate placeholders when scrolled to top`, function() {
+        const rowHeight = (index) => rows.get(index).height;
+        const options = {...scrollerOptions, rowHeight};
+        const scroller = sd.shallowRender(<Scroller {...options}>
+            <TableRowsSet rows={rows}/>
+        </Scroller>);
+        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+        const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+        const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+
+        expect(topPlaceholder.props.style).toEqual({height: 0});
+        expect(bottomPlaceholder.props.style).toEqual({height: 3141}, 'wrong bottom placeholder');
     });
 });
