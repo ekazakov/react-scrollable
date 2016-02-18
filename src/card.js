@@ -6,5 +6,6 @@ export const Card = Record({
     phone: '',
     email: '',
     website: '',
-    company: ''
+    company: '',
+    height: 0
 });

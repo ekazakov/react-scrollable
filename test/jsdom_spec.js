@@ -8,8 +8,10 @@ import {Card} from '../src/card';
 import {Scroller} from '../src/Scroller';
 import {BODY_SCROLL, CONTAINER_SCROLL} from '../src/scrollConstants';
 import stubs from './stubs';
+import _ from 'lodash';
 
 const {max, min, ceil} = Math;
+
 
 function calcViewportSize({viewPortHeight, rowHeight}) {
     return ceil(viewPortHeight / rowHeight);
@@ -188,4 +190,26 @@ describe('Scroller suite', function () {
 
     it.skip(`should correctly render with offset from page top`);
 
+    it(`should support rowHeight as function`, function () {
+        const rowHeight = (index) => 10;
+        const options = {...scrollerOptions, rowHeight};
+
+        const scroller = sd.shallowRender(<Scroller {...options}>
+            <TableRowsSet rows={rows}/>
+        </Scroller>);
+        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+        expect(tableRows.length).toEqual(28);
+    });
+
+    it(`should support rows with different height`, function () {
+        const rowHeight = (index) => rows.get(index).height;
+        const options = {...scrollerOptions, rowHeight};
+        const scroller = sd.shallowRender(<Scroller {...options}>
+            <TableRowsSet rows={rows}/>
+        </Scroller>);
+        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+        expect(tableRows.length).toEqual(11);
+    });
 });

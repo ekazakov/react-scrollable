@@ -40,6 +40,7 @@
     "lodash": "^4.2.1",
     "lodash.debounce": "^4.0.1",
     "lodash.delay": "^4.0.1",
+    "lodash.result": "^4.1.0",
     "ramda": "^0.19.1",
     "react": "0.14.7",
     "react-dom": "0.14.7",

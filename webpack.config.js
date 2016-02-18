@@ -28,7 +28,12 @@ module.exports = {
         publicPath: '/'
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin({
+            'process.env': {
+                BABEL_ENV: JSON.stringify('development/client')
+            }
+        })
     ],
     module: {
         loaders: [

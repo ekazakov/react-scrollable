@@ -3,8 +3,18 @@ import React, { Component, Children, cloneElement, PropTypes} from 'react';
 import deepEqual from 'is-equal';
 import reducer from './scrollerReducer';
 import {BODY_SCROLL, CONTAINER_SCROLL} from './scrollConstants';
+import result from 'lodash.result';
+const {max, min, ceil, floor, abs} = Math;
 
-const {max, min, ceil} = Math;
+const isFunction = fn => typeof fn === 'function';
+
+const addToPrev = (result, height, index) => {
+    index > 0 ? result.push(result[index - 1] + height) : result.push(height);
+    return result;
+};
+
+const calcRowOffsets = (rows) =>
+    rows.reduce(addToPrev, []);
 
 export class Scroller extends Component {
     static propTypes = {
@@ -26,20 +36,54 @@ export class Scroller extends Component {
     constructor(...args) {
         super(...args);
 
+        const {rowHeight} = this.props;
+        if (isFunction(rowHeight)) {
+            const rows = Array.from(
+                Array(this.props.size), (_, index) => rowHeight(index));
+
+            this.rowOffsets = calcRowOffsets(rows);
+
+        }
+
         this.state = {offsetTopIndex: 0};
     }
 
     _onScroll(props) {
-        const {rowHeight, size} = props;
+        const {size, rowHeight} = props;
 
-        const stateUpdate = reducer({
-            rowHeight,
+        const stateUpdate = this._update({
+            rowHeight: props.rowHeight,
             size,
             scrollTop: this._calcScrollTop(props),
             offsetTopIndex: this.state.offsetTopIndex
         });
 
         this.setState(stateUpdate);
+    }
+
+    _update(params) {
+        const {size, scrollTop, offsetTopIndex:topIndex} = params;
+        const rowHeight = params.rowHeight;
+        let offsetTopIndex;
+
+        if (isFunction(rowHeight)) {
+            for (let [index, offset] of this.rowOffsets.entries()) {
+                if (scrollTop < offset) {
+                    offsetTopIndex = index;
+                    break;
+                }
+            }
+        } else {
+            console.log(rowHeight);
+            offsetTopIndex = min(floor(scrollTop / rowHeight), size)
+        }
+
+        const isDown = abs(topIndex) - abs(offsetTopIndex) < 0;
+
+        return {
+            offsetTopIndex,
+            isDown
+        };
     }
 
     _calcScrollTop({scrollType, tableStartOffset, scrollTop}) {
@@ -71,13 +115,20 @@ export class Scroller extends Component {
     }
 
     _renderBody() {
-        const {size, buffer, rowHeight, viewPortHeight} = this.props;
+        const {size, buffer, viewPortHeight, rowHeight} = this.props;
         const {offsetTopIndex} = this.state;
-        const viewPortSize = ceil(viewPortHeight / rowHeight);
-        const from = max(offsetTopIndex - viewPortSize * buffer, 0);
-        const to = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, size);
-        console.log({offsetTopIndex, viewPortHeight, viewPortSize, buffer, offsetTopIndex, size});
-        console.log({from, to});
+        let from, to;
+
+        if (isFunction(rowHeight)) {
+            const viewPortSize = ceil(viewPortHeight / rowHeight);
+            from = max(offsetTopIndex - viewPortSize * buffer, 0);
+            to = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, size);
+        } else {
+
+        }
+
+        //console.log({offsetTopIndex, viewPortHeight, viewPortSize, buffer, offsetTopIndex, size});
+        //console.log({from, to});
 
         return Children.map(
             this.props.children,
@@ -85,7 +136,8 @@ export class Scroller extends Component {
     }
 
     _topPlaceholderHeight() {
-        const {rowHeight, buffer, viewPortHeight} = this.props;
+        const {buffer, viewPortHeight} = this.props;
+        const rowHeight = result(this.props, 'rowHeight');
         const {offsetTopIndex} = this.state;
         const viewPortSize = ceil(viewPortHeight / rowHeight);
         const index = max(offsetTopIndex - viewPortSize * buffer, 0);
@@ -93,7 +145,8 @@ export class Scroller extends Component {
     }
 
     _bottomPlaceholderHeight() {
-        const {rowHeight, size, buffer, viewPortHeight} = this.props;
+        const { size, buffer, viewPortHeight} = this.props;
+        const rowHeight = result(this.props, 'rowHeight');
         const {offsetTopIndex} = this.state;
         const viewPortSize = ceil(viewPortHeight / rowHeight);
         const index = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, size);
