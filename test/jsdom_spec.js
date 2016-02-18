@@ -202,7 +202,7 @@ describe('Scroller suite', function () {
         expect(tableRows.length).toEqual(27);
     });
 
-    it(`should support rows with different height`, function () {
+    it(`should support rows with different height: scrolled to top`, function () {
         const rowHeight = (index) => rows.get(index).height;
         const options = {...scrollerOptions, rowHeight};
         const scroller = sd.shallowRender(<Scroller {...options}>
@@ -213,18 +213,45 @@ describe('Scroller suite', function () {
         expect(tableRows.length).toEqual(11);
     });
 
-    it(`should correctly calculate placeholders when scrolled to top`, function() {
+    it(`should support rows with different height: scrolled to bottom`, function () {
         const rowHeight = (index) => rows.get(index).height;
-        const options = {...scrollerOptions, rowHeight};
+        const options = {...scrollerOptions, scrollTop: 3284, rowHeight};
         const scroller = sd.shallowRender(<Scroller {...options}>
             <TableRowsSet rows={rows}/>
         </Scroller>);
         const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
 
-        const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
-        const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+        expect(tableRows.length).toEqual(9);
+    });
 
-        expect(topPlaceholder.props.style).toEqual({height: 0});
-        expect(bottomPlaceholder.props.style).toEqual({height: 3141}, 'wrong bottom placeholder');
+    describe('Placeholders', function () {
+        it(`should correctly calculate placeholders when scrolled to top`, function() {
+            const rowHeight = (index) => rows.get(index).height;
+            const options = {...scrollerOptions, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+
+            expect(topPlaceholder.props.style).toEqual({height: 0});
+            expect(bottomPlaceholder.props.style).toEqual({height: 3141}, 'wrong bottom placeholder');
+        });
+        
+        it(`should correctly calculate placeholders when scrolled to bottom`, function () {
+            const rowHeight = (index) => rows.get(index).height;
+            const options = {...scrollerOptions, scrollTop: 3284, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+
+            expect(topPlaceholder.props.style).toEqual({height: 3136}, 'wrong top placeholder');
+            expect(bottomPlaceholder.props.style).toEqual({height: 0}, 'wrong bottom placeholder');
+
+        });
     });
 });
