@@ -238,7 +238,7 @@ describe('Scroller suite', function () {
             expect(topPlaceholder.props.style).toEqual({height: 0});
             expect(bottomPlaceholder.props.style).toEqual({height: 3141}, 'wrong bottom placeholder');
         });
-        
+
         it(`should correctly calculate placeholders when scrolled to bottom`, function () {
             const rowHeight = (index) => rows.get(index).height;
             const options = {...scrollerOptions, scrollTop: 3284, rowHeight};
@@ -251,7 +251,22 @@ describe('Scroller suite', function () {
 
             expect(topPlaceholder.props.style).toEqual({height: 3136}, 'wrong top placeholder');
             expect(bottomPlaceholder.props.style).toEqual({height: 0}, 'wrong bottom placeholder');
-
         });
+
+        it(`should correctly calculate placeholders when scrolled to middle`, function() {
+            const rowHeight = (index) => rows.get(index).height;
+            const options = {...scrollerOptions, scrollTop: 500, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+
+            expect(topPlaceholder.props.style).toEqual({height: 334}, 'wrong top placeholder');
+            expect(bottomPlaceholder.props.style).toEqual({height: 2630}, 'wrong bottom placeholder');
+        });
+
+
     });
 });

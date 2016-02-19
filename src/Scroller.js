@@ -140,7 +140,7 @@ export class Scroller extends Component {
         const {buffer, viewPortHeight} = this.props;
         let from = this.state.offsetTopIndex;
         let diff = viewPortHeight * buffer;
-        
+
         while (from > 0 && diff > 0) {
             diff -= this.rows[--from];
         }
