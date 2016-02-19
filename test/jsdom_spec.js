@@ -267,6 +267,21 @@ describe('Scroller suite', function () {
             expect(bottomPlaceholder.props.style).toEqual({height: 2630}, 'wrong bottom placeholder');
         });
 
+        it(`should handle case when a little scrolled down from top`, function() {
+            const rowHeight = (index) => rows.get(index).height;
+            const options = {...scrollerOptions, scrollTop: 60, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
 
+            const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+            expect(tableRows.length).toEqual(13);
+            //const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            //const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+
+            //expect(topPlaceholder.props.style).toEqual({height: 334}, 'wrong top placeholder');
+            //expect(bottomPlaceholder.props.style).toEqual({height: 2630}, 'wrong bottom placeholder');
+        });
     });
 });
