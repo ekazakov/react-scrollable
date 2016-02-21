@@ -4,9 +4,9 @@ import React from 'react';
 import expect from 'expect';
 import {fromJS} from 'immutable';
 
-import {Card} from '../src/card';
+import {Card} from '../example/card';
 import {Scroller} from '../src/Scroller';
-import {BODY_SCROLL, CONTAINER_SCROLL} from '../src/scrollConstants';
+import {BODY_SCROLL, CONTAINER_SCROLL} from '../src/constants';
 import stubs from './stubs';
 import _ from 'lodash';
 

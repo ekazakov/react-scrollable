@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import {findDOMNode} from 'react-dom';
 import debounce from 'lodash.debounce';
 import {Scroller} from './Scroller';
-import {BODY_SCROLL} from './scrollConstants';
+import {BODY_SCROLL} from './constants';
 
-export class ReactTable extends Component {
+export class Scrollable extends Component {
     constructor(...args) {
         super(...args);
         this.state = {

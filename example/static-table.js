@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Card} from './card';
-import {OptionsPanel, BODY_SCROLL, CONTAINER_SCROLL} from './OptionsPanel';
+import {OptionsPanel, BODY_SCROLL, CONTAINER_SCROLL} from './components/OptionsPanel';
 import './main.less';
 
 const log = console.log.bind(console);

@@ -1,8 +1,7 @@
 import React, { Component, Children, cloneElement, PropTypes} from 'react';
 
 import deepEqual from 'is-equal';
-import reducer from './scrollerReducer';
-import {BODY_SCROLL, CONTAINER_SCROLL} from './scrollConstants';
+import {BODY_SCROLL, CONTAINER_SCROLL} from './constants';
 import result from 'lodash.result';
 const {max, min, ceil, floor, abs} = Math;
 
