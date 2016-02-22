@@ -187,7 +187,14 @@ export class Scroller extends Component {
         return this._getRowOffset(size - 1) - this._getRowOffset(to - 1);
     }
 
-    getRowOffset(index) {
-        return index === 0 ? 0 : this._getRowOffset(index - 1);
+    getRowOffsetTop(index) {
+        //console.log(`index: ${index}, offset: ${this._getRowOffset(index - 1)}, startOffset: ${this.props.tableStartOffset}`);
+        const offset = index === 0 ? 0 : this._getRowOffset(index - 1);
+
+        if (this.props.scrollType === BODY_SCROLL) {
+            return offset + this.props.tableStartOffset;
+        }
+
+        return offset;
     }
 }

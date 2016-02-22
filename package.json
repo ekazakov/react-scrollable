@@ -4,7 +4,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "test": "BABEL_ENV=production ./node_modules/mocha/bin/_mocha --compilers js:babel-register --watch",
-    "test-debug": "BABEL_ENV=production devtool ./node_modules/mocha/bin/_mocha 2-c --watch --compilers js:babel-register"
+    "test-debug": "BABEL_ENV=production devtool ./node_modules/mocha/bin/_mocha -c --watch --compilers js:babel-register"
   },
   "license": "MIT",
   "devDependencies": {

@@ -69,57 +69,6 @@ describe('Scroller suite', function () {
         buffer: 1
     });
 
-    describe(`Rows of the same width`, function() {});
-
-    describe('Rows of the different width', function() {});
-
-    it(`should render only viewport and bottom buffer when scrolled to the top`, function () {
-        const options = {...scrollerOptions, scrollTop: 0};
-
-        const scroller = sd.shallowRender(<Scroller {...options}>
-            <TableRowsSet rows={rows}/>
-        </Scroller>);
-        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
-
-        expect(tableRows.length).toEqual(27); //ceil(134 * 2 / 10)
-    });
-
-    it(`should render only viewport and top buffer when scrolled to the bottom`, function () {
-        const height = totalHeight(scrollerOptions) - scrollerOptions.viewPortHeight;
-        const options = {...scrollerOptions, scrollTop: height};
-        const count = rowsCount(options, (viewPortSize, buffer) => viewPortSize * (buffer + 1));
-
-        const scroller = sd.shallowRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
-        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
-
-        expect(tableRows.length).toEqual(27); //ceil(134 * 2 / 10)
-    });
-
-    it(`should render full buffer when document scrolled to center`, () => {
-        const scroller = sd.shallowRender(<Scroller {...scrollerOptions}><TableRowsSet rows={rows}/></Scroller>);
-
-        const options = {...scrollerOptions, scrollTop: 500};
-        const count = 41;// ceil(134 * 3 / 10)
-
-        scroller.reRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
-        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
-
-        expect(tableRows.length).toEqual(count);
-    });
-
-    it(`should correctly render placeholders`, function () {
-        const options = {...scrollerOptions, scrollTop: 300};
-        const scroller = sd.shallowRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
-        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
-
-        const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
-        const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
-
-        expect(tableRows.length).toEqual(41);
-        expect(topPlaceholder.props.style).toEqual({height: 160});
-        expect(bottomPlaceholder.props.style).toEqual({height: 430});
-    });
-
     it(`should accept child component for content rendering`, function() {
         const scroller = sd.shallowRender(<Scroller {...scrollerOptions}>
             <TableRowsSet rows={rows}/>
@@ -131,6 +80,150 @@ describe('Scroller suite', function () {
         const trs = tableRowsSet.everySubTree('TableRow');
         expect(trs.length).toBe(27);
     });
+
+    describe(`Rows of the same width`, function() {
+        it(`should render only viewport and bottom buffer when scrolled to the top`, function () {
+            const options = {...scrollerOptions, scrollTop: 0};
+
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+            const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+            expect(tableRows.length).toEqual(27); //ceil(134 * 2 / 10)
+        });
+
+        it(`should render only viewport and top buffer when scrolled to the bottom`, function () {
+            const height = totalHeight(scrollerOptions) - scrollerOptions.viewPortHeight;
+            const options = {...scrollerOptions, scrollTop: height};
+            const count = rowsCount(options, (viewPortSize, buffer) => viewPortSize * (buffer + 1));
+
+            const scroller = sd.shallowRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
+            const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+            expect(tableRows.length).toEqual(27); //ceil(134 * 2 / 10)
+        });
+
+        it(`should render full buffer when document scrolled to center`, () => {
+            const scroller = sd.shallowRender(<Scroller {...scrollerOptions}><TableRowsSet rows={rows}/></Scroller>);
+
+            const options = {...scrollerOptions, scrollTop: 500};
+            const count = 41;// ceil(134 * 3 / 10)
+
+            scroller.reRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
+            const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+            expect(tableRows.length).toEqual(count);
+        });
+
+        it(`should correctly render placeholders`, function () {
+            const options = {...scrollerOptions, scrollTop: 300};
+            const scroller = sd.shallowRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
+            const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+
+            expect(tableRows.length).toEqual(41);
+            expect(topPlaceholder.props.style).toEqual({height: 160});
+            expect(bottomPlaceholder.props.style).toEqual({height: 430});
+        });
+
+        it(`should return offset of the row by index`, function () {
+            const scroller = sd.shallowRender(<Scroller {...scrollerOptions}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            expect(scroller.getMountedInstance().getRowOffsetTop(10)).toBe(100);
+        });
+    });
+
+    describe('Rows of the different width', function() {
+        const rowHeight = (index) => rows.get(index).height;
+
+        it(`should correctly calculate placeholders when scrolled to top`, function() {
+            const options = {...scrollerOptions, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+
+            expect(topPlaceholder.props.style).toEqual({height: 0});
+            expect(bottomPlaceholder.props.style).toEqual({height: 3141}, 'wrong bottom placeholder');
+        });
+
+        it(`should correctly calculate placeholders when scrolled to bottom`, function () {
+            const options = {...scrollerOptions, scrollTop: 3284, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+
+            expect(topPlaceholder.props.style).toEqual({height: 3136}, 'wrong top placeholder');
+            expect(bottomPlaceholder.props.style).toEqual({height: 0}, 'wrong bottom placeholder');
+        });
+
+        it(`should correctly calculate placeholders when scrolled to middle`, function() {
+            const options = {...scrollerOptions, scrollTop: 500, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+
+            expect(topPlaceholder.props.style).toEqual({height: 334}, 'wrong top placeholder');
+            expect(bottomPlaceholder.props.style).toEqual({height: 2630}, 'wrong bottom placeholder');
+        });
+
+        it(`should handle case when a little scrolled down from top`, function() {
+            const options = {...scrollerOptions, scrollTop: 60, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+            expect(tableRows.length).toEqual(13);
+        });
+
+        it(`should support rows with different height: scrolled to top`, function () {
+            const options = {...scrollerOptions, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+            const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+            expect(tableRows.length).toEqual(11);
+        });
+
+        it(`should support rows with different height: scrolled to bottom`, function () {
+            const options = {...scrollerOptions, scrollTop: 3284, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+            const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
+
+            expect(tableRows.length).toEqual(9);
+        });
+
+        it(`should return offset of the row by index`, function () {
+            const options = {...scrollerOptions, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            expect(scroller.getMountedInstance().getRowOffsetTop(10)).toBe(242);
+        });
+    });
+
+
+
+
 
     it.skip(`should add styles for container scroll`, function () {
         const options = {...scrollerOptions, scrollType: CONTAINER_SCROLL};
@@ -207,86 +300,4 @@ describe('Scroller suite', function () {
         expect(tableRows.length).toEqual(27);
     });
 
-    it(`should support rows with different height: scrolled to top`, function () {
-        const rowHeight = (index) => rows.get(index).height;
-        const options = {...scrollerOptions, rowHeight};
-        const scroller = sd.shallowRender(<Scroller {...options}>
-            <TableRowsSet rows={rows}/>
-        </Scroller>);
-        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
-
-        expect(tableRows.length).toEqual(11);
-    });
-
-    it(`should support rows with different height: scrolled to bottom`, function () {
-        const rowHeight = (index) => rows.get(index).height;
-        const options = {...scrollerOptions, scrollTop: 3284, rowHeight};
-        const scroller = sd.shallowRender(<Scroller {...options}>
-            <TableRowsSet rows={rows}/>
-        </Scroller>);
-        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
-
-        expect(tableRows.length).toEqual(9);
-    });
-
-    describe('Placeholders', function () {
-        it(`should correctly calculate placeholders when scrolled to top`, function() {
-            const rowHeight = (index) => rows.get(index).height;
-            const options = {...scrollerOptions, rowHeight};
-            const scroller = sd.shallowRender(<Scroller {...options}>
-                <TableRowsSet rows={rows}/>
-            </Scroller>);
-
-            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
-            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
-
-            expect(topPlaceholder.props.style).toEqual({height: 0});
-            expect(bottomPlaceholder.props.style).toEqual({height: 3141}, 'wrong bottom placeholder');
-        });
-
-        it(`should correctly calculate placeholders when scrolled to bottom`, function () {
-            const rowHeight = (index) => rows.get(index).height;
-            const options = {...scrollerOptions, scrollTop: 3284, rowHeight};
-            const scroller = sd.shallowRender(<Scroller {...options}>
-                <TableRowsSet rows={rows}/>
-            </Scroller>);
-
-            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
-            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
-
-            expect(topPlaceholder.props.style).toEqual({height: 3136}, 'wrong top placeholder');
-            expect(bottomPlaceholder.props.style).toEqual({height: 0}, 'wrong bottom placeholder');
-        });
-
-        it(`should correctly calculate placeholders when scrolled to middle`, function() {
-            const rowHeight = (index) => rows.get(index).height;
-            const options = {...scrollerOptions, scrollTop: 500, rowHeight};
-            const scroller = sd.shallowRender(<Scroller {...options}>
-                <TableRowsSet rows={rows}/>
-            </Scroller>);
-
-            const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
-            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
-
-            expect(topPlaceholder.props.style).toEqual({height: 334}, 'wrong top placeholder');
-            expect(bottomPlaceholder.props.style).toEqual({height: 2630}, 'wrong bottom placeholder');
-        });
-
-        it(`should handle case when a little scrolled down from top`, function() {
-            const rowHeight = (index) => rows.get(index).height;
-            const options = {...scrollerOptions, scrollTop: 60, rowHeight};
-            const scroller = sd.shallowRender(<Scroller {...options}>
-                <TableRowsSet rows={rows}/>
-            </Scroller>);
-
-            const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
-
-            expect(tableRows.length).toEqual(13);
-            //const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
-            //const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
-
-            //expect(topPlaceholder.props.style).toEqual({height: 334}, 'wrong top placeholder');
-            //expect(bottomPlaceholder.props.style).toEqual({height: 2630}, 'wrong bottom placeholder');
-        });
-    });
 });

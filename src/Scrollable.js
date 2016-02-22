@@ -7,8 +7,8 @@ import {BODY_SCROLL, CONTAINER_SCROLL} from './constants';
 export class Scrollable extends Component {
     constructor(...args) {
         super(...args);
+
         this.state = {
-            //TODO don't call findDOMNode(this.refs.container) in constructor
             viewPortHeight: this._viewPortHeight({scrollType: BODY_SCROLL}),
             scrollTop: this._scrollTop({scrollType: BODY_SCROLL})
         };
@@ -85,5 +85,16 @@ export class Scrollable extends Component {
         return <Scroller {...finalProps} ref="container">
             {this.props.children}
         </Scroller>;
+    }
+
+    scrollToRow(index, toCenter = false) {
+        const offset = this.refs.container.getRowOffsetTop(index) -
+            (toCenter ? this.state.viewPortHeight / 2 : 0);
+
+        if (this.props.scrollType === BODY_SCROLL) {
+            window.scrollTo(0, offset);
+        } else {
+            findDOMNode(this.refs.container).scrollTop = offset;
+        }
     }
 }

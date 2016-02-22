@@ -8,11 +8,22 @@ import '../main.less';
 import {Card} from '../card';
 import pick from 'lodash.pick';
 
+function calculateAbsoluteTopOffset(elem) {
+    let offsetTop = elem.offsetTop;
+
+    while(elem.offsetParent != null) {
+        elem = elem.offsetParent;
+        offsetTop += elem.offsetTop;
+    }
+
+    return offsetTop;
+}
+
 export class App extends React.Component {
     constructor(...args) {
         super(...args);
 
-        const {rows, tableStartOffset} = this.props;
+        const {rows} = this.props;
 
         this.state = {
             options: {
@@ -25,10 +36,16 @@ export class App extends React.Component {
                 maxBuffer: 10,
                 unequalRowsHeight: false,
                 rowHeight: 40,
-                tableStartOffset,
                 className: 'fixedTable'
             }
         };
+    }
+
+    componentDidMount() {
+        const tableStartOffset = calculateAbsoluteTopOffset(document.getElementById('table'));
+        this.setState({
+            options: {...this.state.options, tableStartOffset}
+        });
     }
 
     _rowHeight(index) {
@@ -36,7 +53,6 @@ export class App extends React.Component {
     }
 
     onOptionsChange(options) {
-        //console.log(options);
         const {unequalRowsHeight, scrollType} = options;
 
         options.rowHeight = unequalRowsHeight ? this._rowHeight.bind(this) : 40;
@@ -54,8 +70,8 @@ export class App extends React.Component {
             <div id="controls">
                 <OptionsPanel options={this.state.options} onChange={this.onOptionsChange.bind(this)}/>
             </div>
-            <div>
-                <Scrollable {...options}>
+            <div id="table">
+                <Scrollable {...options} ref="scrollable" >
                     <TableRowsSet rows={rows} fixedHeight={!this.state.options.unequalRowsHeight}/>
                 </Scrollable>
             </div>
