@@ -69,6 +69,10 @@ describe('Scroller suite', function () {
         buffer: 1
     });
 
+    describe(`Rows of the same width`, function() {});
+
+    describe('Rows of the different width', function() {});
+
     it(`should render only viewport and bottom buffer when scrolled to the top`, function () {
         const options = {...scrollerOptions, scrollTop: 0};
 
@@ -106,12 +110,14 @@ describe('Scroller suite', function () {
     it(`should correctly render placeholders`, function () {
         const options = {...scrollerOptions, scrollTop: 300};
         const scroller = sd.shallowRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
+        const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
 
         const topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
         const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
 
+        expect(tableRows.length).toEqual(41);
         expect(topPlaceholder.props.style).toEqual({height: 160});
-        expect(bottomPlaceholder.props.style).toEqual({height: 420});
+        expect(bottomPlaceholder.props.style).toEqual({height: 430});
     });
 
     it(`should accept child component for content rendering`, function() {
