@@ -124,19 +124,11 @@ export class Scroller extends Component {
     }
 
     _renderBody() {
-        const {size, buffer, viewPortHeight, rowHeight} = this.props;
-        const {offsetTopIndex} = this.state;
-        let from, to;
+        const from = this._calcFromIndex();
+        const to = this._calcToIndex();
 
-        if (isFunction(rowHeight)) {
-            from = this._calcFromIndex();
-            to = this._calcToIndex();
-        } else {
-            const viewPortSize = ceil(viewPortHeight / rowHeight);
-            from = max(offsetTopIndex - viewPortSize * buffer, 0);
-            to = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, size);
-        }
-
+        //const {size, buffer, viewPortHeight} = this.props;
+        //const {offsetTopIndex} = this.state;
         //console.log({offsetTopIndex, viewPortHeight,  buffer, offsetTopIndex, size});
         //console.log({from, to, buffer});
 
@@ -146,29 +138,38 @@ export class Scroller extends Component {
     }
 
     _calcFromIndex() {
-        const {buffer, viewPortHeight} = this.props;
+        const {buffer, viewPortHeight, rowHeight, scrollTop} = this.props;
         let from = this.state.offsetTopIndex;
         let diff = viewPortHeight * buffer;
 
-        while (from > 0 && diff > 0) {
-            diff -= this.rows[--from];
+        if (isFunction(rowHeight)) {
+            while (from > 0 && diff > 0) {
+                diff -= this.rows[--from];
+            }
+
+            return from;
         }
 
-        return from;
+        return max(floor((scrollTop - diff)/rowHeight), 0);
     }
 
     _calcToIndex() {
-        const {size, buffer, viewPortHeight} = this.props;
+        const {size, buffer, viewPortHeight, rowHeight, scrollTop} = this.props;
         const {offsetTopIndex} = this.state;
+
         let to = offsetTopIndex;
         let diff = viewPortHeight + viewPortHeight * buffer;
 
-        while(to < size && diff > 0) {
-            diff -= this.rows[to++];
+        if (isFunction(rowHeight)) {
+            while (to < size && diff > 0) {
+                diff -= this.rows[to++];
+            }
+
+            //console.log({diff, to});
+            return to;
         }
 
-        //console.log({diff, to});
-        return to;
+        return min(ceil((scrollTop + diff)/rowHeight), size);
     }
 
     _topPlaceholderHeight() {

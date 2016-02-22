@@ -71,14 +71,13 @@ describe('Scroller suite', function () {
 
     it(`should render only viewport and bottom buffer when scrolled to the top`, function () {
         const options = {...scrollerOptions, scrollTop: 0};
-        const count = rowsCount(options, (viewPortSize, buffer) => viewPortSize * (buffer + 1));
 
         const scroller = sd.shallowRender(<Scroller {...options}>
             <TableRowsSet rows={rows}/>
         </Scroller>);
         const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
 
-        expect(tableRows.length).toEqual(28);
+        expect(tableRows.length).toEqual(27); //ceil(134 * 2 / 10)
     });
 
     it(`should render only viewport and top buffer when scrolled to the bottom`, function () {
@@ -89,14 +88,14 @@ describe('Scroller suite', function () {
         const scroller = sd.shallowRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
         const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
 
-        expect(tableRows.length).toEqual( count);
+        expect(tableRows.length).toEqual(27); //ceil(134 * 2 / 10)
     });
 
-    it(`should render full buffer when document scrolled`, () => {
+    it(`should render full buffer when document scrolled to center`, () => {
         const scroller = sd.shallowRender(<Scroller {...scrollerOptions}><TableRowsSet rows={rows}/></Scroller>);
 
-        const options = {...scrollerOptions, scrollTop: 200};
-        const count = rowsCount(options, (viewPortSize, buffer) => viewPortSize * (2 * buffer + 1));
+        const options = {...scrollerOptions, scrollTop: 500};
+        const count = 41;// ceil(134 * 3 / 10)
 
         scroller.reRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
         const tableRows = scroller.dive(['TableRowsSet']).everySubTree('TableRow');
@@ -124,7 +123,7 @@ describe('Scroller suite', function () {
         expect(tableRowsSet).toExist();
 
         const trs = tableRowsSet.everySubTree('TableRow');
-        expect(trs.length).toBe(28);
+        expect(trs.length).toBe(27);
     });
 
     it.skip(`should add styles for container scroll`, function () {
