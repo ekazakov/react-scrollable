@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-//import _ from 'lodash';
-//import debounce from 'lodash.debounce';
-//import delay from 'lodash.delay';
 
-export const BODY_SCROLL = "BODY_SCROLL";
-export const CONTAINER_SCROLL = "CONTAINER_SCROLL";
 function noop() {}
+
 export class OptionsPanel extends Component {
     static defaultProps = {
         onChange: noop,
@@ -34,7 +30,7 @@ export class OptionsPanel extends Component {
 
     render() {
         const {options: {
-            scrollType,
+            isBodyScroll,
             size,
             minSize,
             maxSize,
@@ -50,18 +46,18 @@ export class OptionsPanel extends Component {
                 <label>
                     <input type="radio"
                            name="type"
-                           value={BODY_SCROLL}
-                           checked={BODY_SCROLL === scrollType}
-                           onChange={(e) => this.onChange('scrollType', BODY_SCROLL)} /> body
+                           value={true}
+                           checked={isBodyScroll}
+                           onChange={(e) => this.onChange('isBodyScroll', true)} /> body
                 </label>
             </div>
             <div>
                 <label>
                     <input type="radio"
                            name="type"
-                           value={CONTAINER_SCROLL}
-                           checked={CONTAINER_SCROLL === scrollType}
-                           onChange={(e) => this.onChange('scrollType', CONTAINER_SCROLL)}/> container
+                           value={false}
+                           checked={!isBodyScroll}
+                           onChange={(e) => this.onChange('isBodyScroll', false)}/> container
                 </label>
             </div>
             <h4>Rows height</h4>

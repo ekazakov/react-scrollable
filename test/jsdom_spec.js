@@ -6,7 +6,6 @@ import {fromJS} from 'immutable';
 
 import {Card} from '../example/card';
 import {Scroller} from '../src/Scroller';
-import {BODY_SCROLL, CONTAINER_SCROLL} from '../src/constants';
 import stubs from './stubs';
 import _ from 'lodash';
 
@@ -60,7 +59,7 @@ const TableRowsSet = ({rows, from, to}) => {
 describe('Scroller suite', function () {
     const rows = fromJS(stubs.map(stub => new Card(stub)));
     const scrollerOptions = Object.freeze({
-        scrollType: BODY_SCROLL,
+        isBodyScroll: true,
         size: rows.size,
         rowHeight: 10,
         viewPortHeight: 134,
@@ -226,7 +225,7 @@ describe('Scroller suite', function () {
 
 
     it.skip(`should add styles for container scroll`, function () {
-        const options = {...scrollerOptions, scrollType: CONTAINER_SCROLL};
+        const options = {...scrollerOptions, isBodyScroll: false};
         const tree = sd.shallowRender(<Scroller {...options}>
             <TableRowsSet rows={rows}/>
         </Scroller>);
@@ -237,7 +236,7 @@ describe('Scroller suite', function () {
     });
 
     it.skip('should allow provide custom styles', function () {
-        const options = {...scrollerOptions, scrollType: CONTAINER_SCROLL, style: {color: 'red'}};
+        const options = {...scrollerOptions, isBodyScroll: false, style: {color: 'red'}};
         const tree = sd.shallowRender(<Scroller {...options}>
             <TableRowsSet rows={rows}/>
         </Scroller>);
@@ -250,7 +249,7 @@ describe('Scroller suite', function () {
     it.skip(`should allow override container scroll styles with custom`, function() {
         const options = {
             ...scrollerOptions,
-            scrollType: CONTAINER_SCROLL,
+            isBodyScroll: false,
             style: {overflow: 'scroll'}
         };
         const tree = sd.shallowRender(<Scroller {...options}>

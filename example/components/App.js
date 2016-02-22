@@ -3,7 +3,6 @@ import {OptionsPanel} from './OptionsPanel';
 import {TableRow} from './TableRow';
 import {TableRowsSet} from './TableRowSet';
 import {Scrollable} from '../../src/Scrollable';
-import {BODY_SCROLL, CONTAINER_SCROLL} from '../../src/constants';
 import '../main.less';
 import {Card} from '../card';
 import pick from 'lodash.pick';
@@ -29,7 +28,7 @@ export class App extends React.Component {
             options: {
                 minSize: 1000,
                 maxSize: rows.size,
-                scrollType: BODY_SCROLL,
+                isBodyScroll: true,
                 size: 1000,
                 row: 0,
                 buffer: 1,
@@ -54,10 +53,10 @@ export class App extends React.Component {
     }
 
     onOptionsChange(options) {
-        const {unequalRowsHeight, scrollType} = options;
+        const {unequalRowsHeight, isBodyScroll} = options;
 
         options.rowHeight = unequalRowsHeight ? this._rowHeight.bind(this) : 40;
-        options.className =  scrollType == BODY_SCROLL ? '' : 'containerScroll';
+        options.className = isBodyScroll ? '' : 'containerScroll';
 
         if (this.state.options.row !== options.row) {
             this.refs.scrollable.scrollToRow(options.row);
@@ -69,7 +68,7 @@ export class App extends React.Component {
     render() {
         const {rows} = this.props;
         const options = pick(this.state.options,
-            ['scrollType', 'size', 'buffer', 'tableStartOffset', 'rowHeight', 'className']);
+            ['isBodyScroll', 'size', 'buffer', 'tableStartOffset', 'rowHeight', 'className']);
         return <div>
             <h1>React Table</h1>
             <div id="controls">

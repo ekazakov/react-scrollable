@@ -1,7 +1,7 @@
 import React, { Component, Children, cloneElement, PropTypes} from 'react';
 
 import deepEqual from 'is-equal';
-import {BODY_SCROLL, CONTAINER_SCROLL} from './constants';
+//import {BODY_SCROLL, CONTAINER_SCROLL} from './constants';
 import result from 'lodash.result';
 const {max, min, ceil, floor, abs} = Math;
 
@@ -21,7 +21,7 @@ export class Scroller extends Component {
         size: PropTypes.number.isRequired,
         scrollTop: PropTypes.number.isRequired,
         viewPortHeight: PropTypes.number.isRequired,
-        scrollType: PropTypes.oneOf([BODY_SCROLL, CONTAINER_SCROLL]),
+        isBodyScroll: PropTypes.bool.isRequired,
         tableStartOffset: PropTypes.number,
         buffer: PropTypes.number
     };
@@ -29,7 +29,7 @@ export class Scroller extends Component {
     static defaultProps = {
         tableStartOffset: 0,
         buffer: 1,
-        scrollType: BODY_SCROLL
+        isBodyScroll: true
     };
 
     constructor(...args) {
@@ -85,8 +85,8 @@ export class Scroller extends Component {
         };
     }
 
-    _calcScrollTop({scrollType, tableStartOffset, scrollTop}) {
-        return scrollType === BODY_SCROLL ? max(scrollTop - tableStartOffset, 0): scrollTop;
+    _calcScrollTop({isBodyScroll, tableStartOffset, scrollTop}) {
+        return isBodyScroll ? max(scrollTop - tableStartOffset, 0): scrollTop;
     }
 
     componentWillMount() {
@@ -191,7 +191,7 @@ export class Scroller extends Component {
         //console.log(`index: ${index}, offset: ${this._getRowOffset(index - 1)}, startOffset: ${this.props.tableStartOffset}`);
         const offset = index === 0 ? 0 : this._getRowOffset(index - 1);
 
-        if (this.props.scrollType === BODY_SCROLL) {
+        if (this.props.isBodyScroll) {
             return offset + this.props.tableStartOffset;
         }
 
