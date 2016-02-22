@@ -68,15 +68,6 @@ export class OptionsPanel extends Component {
                            checked={unequalRowsHeight}/> rows of different height
                 </label>
             </div>
-
-{/*            <div style={{marginTop: 10}}>
-                <label>
-                    <input type="checkbox"
-                           onChange={this.onInfinityScrollChange.bind(this)}
-                           checked={infinityScroll}/> infinity scroll
-                </label>
-            </div>*/}
-
             <h4>Data size</h4>
             <div>
                 {minSize/1000}k
