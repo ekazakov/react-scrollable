@@ -3,7 +3,7 @@ import {OptionsPanel} from './OptionsPanel';
 import {TableRow} from './TableRow';
 import {TableRowsSet} from './TableRowSet';
 import {Scrollable} from '../../src/Scrollable';
-import {BODY_SCROLL} from '../../src/constants';
+import {BODY_SCROLL, CONTAINER_SCROLL} from '../../src/constants';
 import '../main.less';
 import {Card} from '../card';
 import pick from 'lodash.pick';
@@ -23,7 +23,7 @@ export class App extends React.Component {
                 buffer: 1,
                 minBuffer: 1,
                 maxBuffer: 10,
-                equalRowHeight: true,
+                unequalRowsHeight: false,
                 rowHeight: 40,
                 tableStartOffset,
                 className: 'fixedTable'
@@ -31,7 +31,17 @@ export class App extends React.Component {
         };
     }
 
+    _rowHeight(index) {
+        return this.props.rows.get(index).get('height');
+    }
+
     onOptionsChange(options) {
+        //console.log(options);
+        const {unequalRowsHeight, scrollType} = options;
+
+        options.rowHeight = unequalRowsHeight ? this._rowHeight.bind(this) : 40;
+        options.className =  scrollType == BODY_SCROLL ? '' : 'containerScroll';
+
         this.setState({options});
     }
 
@@ -46,7 +56,7 @@ export class App extends React.Component {
             </div>
             <div>
                 <Scrollable {...options}>
-                    <TableRowsSet rows={rows}/>
+                    <TableRowsSet rows={rows} fixedHeight={!this.state.options.unequalRowsHeight}/>
                 </Scrollable>
             </div>
         </div>;

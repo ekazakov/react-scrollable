@@ -15,13 +15,11 @@ h1 {
 }
 
 .containerScroll {
-  overflow: auto;
-
   background-color: #073542;
   box-shadow: inset 0px 0px 3px 3px rgba(0, 0, 0, 0.15);
-  max-width: 1400px;
+  max-width: 1200px;
   padding: 0 10px;
-
+  //overflow-x: hidden!important;
   min-height: 600px;
   max-height: ~"calc(100% - 40px - 59px)";
 }
@@ -49,34 +47,18 @@ h1 {
   margin: 0 10px;
 }
 
-.performance {
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform: translateZ(0);
+table {
+  border: none;
+  width: calc(80px + 200px + 300px + 180px + 300px);
+  border-collapse: collapse;
 }
 
-.fixedTable, .containerScroll {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
+td, th {
+  border: none;
+}
 
-  table {
-    border: none;
-    width: calc(80px + 200px + 300px + 180px + 300px);
-    border-collapse: collapse;
-  }
-
-  td, th {
-    border: none;
-  }
-
-  th {
-    text-align: left;
-  }
-
-  td {
-    height: 40px;
-  }
+th {
+  text-align: left;
 }
 
 .index {

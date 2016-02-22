@@ -34,17 +34,18 @@ export class Scroller extends Component {
 
     constructor(...args) {
         super(...args);
-
-        const {rowHeight} = this.props;
-        if (isFunction(rowHeight)) {
-            this.rows = Array.from(
-                Array(this.props.size), (_, index) => rowHeight(index));
-
-            this.rowOffsets = calcRowOffsets(this.rows);
-
-        }
+        this._cacheRowsHeightsAndOffsets(this.props);
 
         this.state = {offsetTopIndex: 0};
+    }
+
+    _cacheRowsHeightsAndOffsets(props) {
+        const {rowHeight} = props;
+        if (isFunction(rowHeight)) {
+            this.rows = Array.from(
+                new Array(props.size), (_, index) => rowHeight(index));
+            this.rowOffsets = calcRowOffsets(this.rows);
+        }
     }
 
     _onScroll(props) {
@@ -98,11 +99,20 @@ export class Scroller extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        this._cacheRowsHeightsAndOffsets(nextProps);
         this._onScroll(nextProps);
     }
 
     render() {
-        const containerStyle = {overflow: 'auto'};
+        const containerStyle = {
+            overflow: 'auto',
+            WebkitBackfaceVisibility: 'hidden',
+            backfaceVisibility: 'hidden',
+            WebkitTransform: 'translateZ(0)',
+            transform: 'translateZ(0)',
+            WebkitOverflowScrolling: 'touch'
+        };
+
         const {className, style = {}} = this.props;
         const finalStyle = {...containerStyle, ...style};
 
@@ -188,4 +198,6 @@ export class Scroller extends Component {
         const index = min(offsetTopIndex + viewPortSize + viewPortSize * buffer, size);
         return (size - index) * rowHeight;
     }
+
+    getRowOffset(index) {}
 }

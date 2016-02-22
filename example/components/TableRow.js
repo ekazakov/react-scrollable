@@ -2,9 +2,16 @@ import React from 'react';
 
 export class TableRow extends React.Component {
     render() {
-        const {row} = this.props;
+        const {row, fixedHeight} = this.props;
 
-        return <tr>
+        let height;
+        if (fixedHeight) {
+            height = 40;
+        } else {
+            height = row.get('height');
+        }
+
+        return <tr style={{height}}>
             <td className="index">
                 <div>{row.get('id')}</div>
             </td>

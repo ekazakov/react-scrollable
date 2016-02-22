@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import {findDOMNode} from 'react-dom';
 import debounce from 'lodash.debounce';
 import {Scroller} from './Scroller';
-import {BODY_SCROLL} from './constants';
+import {BODY_SCROLL, CONTAINER_SCROLL} from './constants';
 
 export class Scrollable extends Component {
     constructor(...args) {
         super(...args);
         this.state = {
             //TODO don't call findDOMNode(this.refs.container) in constructor
-            viewPortHeight: this._viewPortHeight(this.props),
-            scrollTop: this._scrollTop(this.props)
+            viewPortHeight: this._viewPortHeight({scrollType: BODY_SCROLL}),
+            scrollTop: this._scrollTop({scrollType: BODY_SCROLL})
         };
         this.onScroll = () => this._onScroll(this.props);
         this.onResize = () => this._onResize();
@@ -43,7 +43,11 @@ export class Scrollable extends Component {
         if (scrollType === BODY_SCROLL) {
             window.addEventListener('scroll', this.onScroll);
         } else {
-            this.refs.container.addEventListener('scroll', this.onScroll);
+            findDOMNode(this.refs.container).addEventListener('scroll', this.onScroll);
+            this.setState({
+                viewPortHeight: this._viewPortHeight(this.props),
+                scrollTop: this._scrollTop(this.props)
+            });
         }
 
         window.addEventListener('resize', this.onResize);
@@ -60,16 +64,20 @@ export class Scrollable extends Component {
             if (nextProps.scrollType === BODY_SCROLL) {
                 findDOMNode(this.refs.container).removeEventListener('scroll', this.onScroll);
                 window.addEventListener('scroll', this.onScroll);
+
+                this.setState({
+                    viewPortHeight: this._viewPortHeight(nextProps),
+                    scrollTop: this._scrollTop(nextProps)
+                });
+
             } else {
                 window.removeEventListener('scroll', this.onScroll);
                 findDOMNode(this.refs.container).addEventListener('scroll', this.onScroll);
+
+                this.setState({scrollTop: 0}, ()=>
+                    this.setState({viewPortHeight: this._viewPortHeight(nextProps)}));
             }
         }
-
-        this.setState({
-            viewPortHeight: this._viewPortHeight(nextProps),
-            scrollTop: this._scrollTop(nextProps)
-        });
     }
 
     render() {

@@ -1,5 +1,6 @@
 'use strict';
-require('babel/register');
+require('babel-register');
+const _ = require('lodash');
 const faker = require('faker');
 const size = 20000;
 
@@ -13,7 +14,8 @@ function createStubItem(id) {
         phone: faker.phone.phoneNumber(),
         email: faker.internet.email(),
         website: faker.internet.domainName(),
-        company: faker.company.companyName()
+        company: faker.company.companyName(),
+        height: _.random(40,90)
     };
 }
 

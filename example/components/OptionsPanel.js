@@ -15,14 +15,17 @@ export class OptionsPanel extends Component {
     onChange(prop, value) {
         const {onChange, options} = this.props;
         if (typeof value === 'string') {
-            value = parseInt(value, 10);
+            const tmpValue = parseInt(value, 10);
+            if (tmpValue === tmpValue) {
+                value = tmpValue;
+            }
         }
         onChange({...options, [prop]: value});
     }
 
     render() {
         const {options:
-            {scrollType, size, minSize, maxSize, buffer, maxBuffer, minBuffer, equalRowHeight}} = this.props;
+            {scrollType, size, minSize, maxSize, buffer, maxBuffer, minBuffer, unequalRowsHeight}} = this.props;
         return <div className="controlsPanel">
             <h4>Scroll type</h4>
             <div>
@@ -31,7 +34,7 @@ export class OptionsPanel extends Component {
                            name="type"
                            value={BODY_SCROLL}
                            checked={BODY_SCROLL === scrollType}
-                           onChange={(e) => this.onChange('scrollType', e.target.value)} /> body
+                           onChange={(e) => this.onChange('scrollType', BODY_SCROLL)} /> body
                 </label>
             </div>
             <div>
@@ -40,15 +43,15 @@ export class OptionsPanel extends Component {
                            name="type"
                            value={CONTAINER_SCROLL}
                            checked={CONTAINER_SCROLL === scrollType}
-                           onChange={(e) => this.onChange('scrollType', e.target.value)}/> container
+                           onChange={(e) => this.onChange('scrollType', CONTAINER_SCROLL)}/> container
                 </label>
             </div>
             <h4>Rows height</h4>
             <div style={{marginTop: 10}}>
                 <label>
                     <input type="checkbox"
-                           onChange={(e) => this.onChange('fixedRows', e.target.value)}
-                           checked={equalRowHeight}/> rows of different height
+                           onChange={(e) => this.onChange('unequalRowsHeight', e.target.checked)}
+                           checked={unequalRowsHeight}/> rows of different height
                 </label>
             </div>
 
