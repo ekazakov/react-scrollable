@@ -12,6 +12,15 @@ export class OptionsPanel extends Component {
         options: {}
     };
 
+    constructor(...args) {
+        super(...args);
+        this.state = {row: this.props.row};
+    }
+
+    onRowChange(value) {
+        this.setState({row: parseInt(value, 10)});
+    }
+
     onChange(prop, value) {
         const {onChange, options} = this.props;
         if (typeof value === 'string') {
@@ -24,8 +33,17 @@ export class OptionsPanel extends Component {
     }
 
     render() {
-        const {options:
-            {scrollType, size, minSize, maxSize, buffer, maxBuffer, minBuffer, unequalRowsHeight}} = this.props;
+        const {options: {
+            scrollType,
+            size,
+            minSize,
+            maxSize,
+            buffer,
+            maxBuffer,
+            minBuffer,
+            unequalRowsHeight,
+            row}} = this.props;
+
         return <div className="controlsPanel">
             <h4>Scroll type</h4>
             <div>
@@ -95,6 +113,14 @@ export class OptionsPanel extends Component {
 
             <div style={{marginTop: 10}}>
                 buffer: {buffer}
+            </div>
+
+            <h4>Scroll to row</h4>
+            <div>
+                <input type="text"
+                       value={this.state.row}
+                       onChange={(e) => this.onRowChange(e.target.value)}
+                       onBlur={(e) => this.onChange('row', e.target.value)}/>
             </div>
         </div>;
     }

@@ -31,6 +31,7 @@ export class App extends React.Component {
                 maxSize: rows.size,
                 scrollType: BODY_SCROLL,
                 size: 1000,
+                row: 0,
                 buffer: 1,
                 minBuffer: 1,
                 maxBuffer: 10,
@@ -57,6 +58,10 @@ export class App extends React.Component {
 
         options.rowHeight = unequalRowsHeight ? this._rowHeight.bind(this) : 40;
         options.className =  scrollType == BODY_SCROLL ? '' : 'containerScroll';
+
+        if (this.state.options.row !== options.row) {
+            this.refs.scrollable.scrollToRow(options.row);
+        }
 
         this.setState({options});
     }
