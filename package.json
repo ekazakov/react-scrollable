@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/ekazakov/react-scrollable",
   "scripts": {
+    "example": "./node_modules/.bin/webpack-dev-server --config ./example/webpack.config.js",
     "start": "webpack-dev-server",
     "test": "BABEL_ENV=production ./node_modules/mocha/bin/_mocha --compilers js:babel-register --watch",
     "test-debug": "BABEL_ENV=production devtool ./node_modules/mocha/bin/_mocha -c --watch --compilers js:babel-register"
