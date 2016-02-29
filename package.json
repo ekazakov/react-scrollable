@@ -1,5 +1,7 @@
 {
   "name": "react-scrollable",
+  "description": "React Scrollable",
+  "main": "lib/index.js",
   "version": "1.0.0",
   "keywords": [
     "react",
@@ -11,6 +13,14 @@
   ],
   "author": "Evgeniy Kazakov <evgeniy.kazakovg@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ekazakov/react-scrollable.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ekazakov/react-scrollable/issues"
+  },
+  "homepage": "https://github.com/ekazakov/react-scrollable",
   "scripts": {
     "start": "webpack-dev-server",
     "test": "BABEL_ENV=production ./node_modules/mocha/bin/_mocha --compilers js:babel-register --watch",
