@@ -2,6 +2,7 @@
 * [] May be browser tests
 * [] Code coverage
 * [] Docs
+* [] Should component update hook\
 * [] Scroll spy
 * [] Examples
 * [] CI integration

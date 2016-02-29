@@ -2,7 +2,7 @@ import React from 'react';
 import {OptionsPanel} from './OptionsPanel';
 import {TableRow} from './TableRow';
 import {TableRowsSet} from './TableRowSet';
-import {Scrollable} from '../../src/Scrollable';
+import Scrollable from '../../src/Scrollable';
 import '../main.less';
 import {Card} from '../card';
 import pick from 'lodash.pick';

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {findDOMNode} from 'react-dom';
+import ReactDOM from 'react-dom';
 import debounce from 'lodash.debounce';
 import {Scroller} from './Scroller';
 
-export class Scrollable extends Component {
+export default class Scrollable extends Component {
     constructor(...args) {
         super(...args);
 
@@ -30,11 +30,11 @@ export class Scrollable extends Component {
 
     _scrollTop({isBodyScroll}) {
         return isBodyScroll ?
-            window.pageYOffset: findDOMNode(this.refs.container).scrollTop;
+            window.pageYOffset: ReactDOM.findDOMNode(this.refs.container).scrollTop;
     }
 
     _viewPortHeight({isBodyScroll}) {
-        return isBodyScroll ? window.innerHeight : findDOMNode(this.refs.container).offsetHeight;
+        return isBodyScroll ? window.innerHeight : ReactDOM.findDOMNode(this.refs.container).offsetHeight;
     }
 
     componentDidMount() {
@@ -42,7 +42,7 @@ export class Scrollable extends Component {
         if (isBodyScroll) {
             window.addEventListener('scroll', this.onScroll);
         } else {
-            findDOMNode(this.refs.container).addEventListener('scroll', this.onScroll);
+            ReactDOM.findDOMNode(this.refs.container).addEventListener('scroll', this.onScroll);
             this.setState({
                 viewPortHeight: this._viewPortHeight(this.props),
                 scrollTop: this._scrollTop(this.props)
@@ -54,14 +54,14 @@ export class Scrollable extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('scroll', this.onScroll);
-        findDOMNode(this.refs.container).removeEventListener('scroll', this.onScroll);
+        ReactDOM.findDOMNode(this.refs.container).removeEventListener('scroll', this.onScroll);
         window.removeEventListener('resize', this.onResize);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.isBodyScroll !== this.props.isBodyScroll) {
             if (nextProps.isBodyScroll) {
-                findDOMNode(this.refs.container).removeEventListener('scroll', this.onScroll);
+                ReactDOM.findDOMNode(this.refs.container).removeEventListener('scroll', this.onScroll);
                 window.addEventListener('scroll', this.onScroll);
 
                 this.setState({
@@ -71,7 +71,7 @@ export class Scrollable extends Component {
 
             } else {
                 window.removeEventListener('scroll', this.onScroll);
-                findDOMNode(this.refs.container).addEventListener('scroll', this.onScroll);
+                ReactDOM.findDOMNode(this.refs.container).addEventListener('scroll', this.onScroll);
 
                 this.setState({scrollTop: 0}, ()=>
                     this.setState({viewPortHeight: this._viewPortHeight(nextProps)}));
@@ -93,7 +93,7 @@ export class Scrollable extends Component {
         if (this.props.isBodyScroll) {
             window.scrollTo(0, offset);
         } else {
-            findDOMNode(this.refs.container).scrollTop = offset;
+            ReactDOM.findDOMNode(this.refs.container).scrollTop = offset;
         }
     }
 }
