@@ -126,11 +126,6 @@ export class Scroller extends Component {
     }
 
     _renderBody(from, to) {
-        //const {size, buffer, viewPortHeight} = this.props;
-        //const {offsetTopIndex} = this.state;
-        //console.log({offsetTopIndex, viewPortHeight,  buffer, offsetTopIndex, size});
-        //console.log({from, to, buffer});
-
         return Children.map(
             this.props.children,
             (child) => cloneElement(child, {from, to}, child.props.children));
