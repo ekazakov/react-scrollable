@@ -1,8 +1,6 @@
 import React, { Component, Children, cloneElement, PropTypes} from 'react';
 
 import deepEqual from 'is-equal';
-//import {BODY_SCROLL, CONTAINER_SCROLL} from './constants';
-import result from 'lodash.result';
 const {max, min, ceil, floor, abs} = Math;
 
 const isFunction = fn => typeof fn === 'function';

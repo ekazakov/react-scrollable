@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {findDOMNode} from 'react-dom';
 import debounce from 'lodash.debounce';
 import {Scroller} from './Scroller';
-//import {BODY_SCROLL, CONTAINER_SCROLL} from './constants';
 
 export class Scrollable extends Component {
     constructor(...args) {
