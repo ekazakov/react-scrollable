@@ -24,12 +24,13 @@
   "scripts": {
     "build": "NODE_ENV=development ./node_modules/.bin/webpack --output-file react-scrollable.js",
     "build:min": "NODE_ENV=production ./node_modules/.bin/webpack --output-file react-scrollable.min.js",
+    "build:lib": "./node_modules/.bin/babel src --out-dir lib",
     "test": "BABEL_ENV=production ./node_modules/mocha/bin/_mocha --compilers js:babel-register --watch",
     "test:debug": "BABEL_ENV=production devtool ./node_modules/mocha/bin/_mocha -c --watch --compilers js:babel-register",
     "example": "./node_modules/.bin/webpack-dev-server --config ./example/webpack.config.js"
   },
   "devDependencies": {
-    "babel": "^6.5.1",
+    "babel-cli": "^6.5.1",
     "babel-core": "^6.5.1",
     "babel-loader": "^6.2.2",
     "babel-plugin-react-transform": "^2.0.0",
@@ -63,7 +64,6 @@
   },
   "dependencies": {
     "is-equal": "^1.4.2",
-    "lodash.debounce": "^4.0.1",
-    "lodash.result": "^4.1.0"
+    "lodash.debounce": "^4.0.1"
   }
 }

@@ -16,7 +16,6 @@ if (env === 'production') {
 
 
 module.exports = {
-    devtool: 'source-map',
     entry: {
         index: './src/Scrollable.js'
     },
