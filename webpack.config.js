@@ -10,10 +10,29 @@ var plugins = [
 
 if (env === 'production') {
     plugins.push(new webpack.optimize.UglifyJsPlugin({
-        compress: {warnings: false}
+        compressor: {
+            pure_getters: true,
+            unsafe: true,
+            unsafe_comps: true,
+            screw_ie8: true,
+            warnings: true
+        }
     }));
 }
 
+var reactExternal = {
+    root: 'React',
+    commonjs2: 'react',
+    commonjs: 'react',
+    amd: 'react'
+};
+
+var reactDomExternal = {
+    root: 'ReactDOM',
+    commonjs2: 'react-dom',
+    commonjs: 'react-dom',
+    amd: 'react-dom'
+};
 
 module.exports = {
     entry: {
@@ -25,17 +44,17 @@ module.exports = {
         libraryTarget: 'umd'
     },
     externals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM'
+        'react': reactExternal,
+        'react-dom': reactDomExternal
     },
     plugins: plugins,
     module: {
         loaders: [
             {
                 test: /\.js$/,
-                loaders: ['babel'],
-                exclude: /node_modules/,
-                include: path.join(__dirname, '/src/')
+                loaders: ['babel-loader'],
+                //exclude: /node_modules/,
+                //include: path.join(__dirname, '/src/')
             }
         ]
     }
