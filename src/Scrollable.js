@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import debounce from 'lodash.debounce';
+import debounce from 'lodash-es/debounce';
 import {Scroller} from './Scroller';
 
 export default class Scrollable extends Component {

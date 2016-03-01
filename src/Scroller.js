@@ -1,7 +1,7 @@
 import React, { Component, Children, cloneElement, PropTypes} from 'react';
 
-import deepEqual from 'is-equal';
-const {max, min, ceil, floor, abs} = Math;
+import {shallowEqual} from './shallowEqual';
+const {max, min, ceil, floor} = Math;
 
 const isFunction = fn => typeof fn === 'function';
 
@@ -60,7 +60,7 @@ export class Scroller extends Component {
     }
 
     _update(params) {
-        const {size, scrollTop, offsetTopIndex:topIndex} = params;
+        const {size, scrollTop} = params;
         const rowHeight = params.rowHeight;
         let offsetTopIndex;
 
@@ -75,12 +75,7 @@ export class Scroller extends Component {
             offsetTopIndex = min(floor(scrollTop / rowHeight), size)
         }
 
-        const isDown = abs(topIndex) - abs(offsetTopIndex) < 0;
-
-        return {
-            offsetTopIndex,
-            isDown
-        };
+        return {offsetTopIndex};
     }
 
     _calcScrollTop({isBodyScroll, tableStartOffset, scrollTop}) {
@@ -92,7 +87,7 @@ export class Scroller extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !deepEqual(this.state, nextState) || !deepEqual(this.props, nextProps);
+        return !shallowEqual(this.state, nextState) || !shallowEqual(this.props, nextProps);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -181,7 +176,6 @@ export class Scroller extends Component {
     }
 
     getRowOffsetTop(index) {
-        //console.log(`index: ${index}, offset: ${this._getRowOffset(index - 1)}, startOffset: ${this.props.tableStartOffset}`);
         const offset = index === 0 ? 0 : this._getRowOffset(index - 1);
 
         if (this.props.isBodyScroll) {
