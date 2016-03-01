@@ -30,38 +30,17 @@ export class Scroller extends Component {
         isBodyScroll: true
     };
 
-    constructor(...args) {
-        super(...args);
-        this._cacheRowsHeightsAndOffsets(this.props);
-
-        this.state = {offsetTopIndex: 0};
-    }
-
     _cacheRowsHeightsAndOffsets(props) {
-        const {rowHeight} = props;
+        const {rowHeight, size} = props;
         if (isFunction(rowHeight)) {
             this.rows = Array.from(
-                new Array(props.size), (_, index) => rowHeight(index));
+                new Array(size), (_, index) => rowHeight(index));
             this.rowOffsets = calcRowOffsets(this.rows);
         }
     }
 
-    _onScroll(props) {
-        const {size, rowHeight} = props;
-
-        const stateUpdate = this._update({
-            rowHeight,
-            size,
-            scrollTop: this._calcScrollTop(props),
-            offsetTopIndex: this.state.offsetTopIndex
-        });
-
-        this.setState(stateUpdate);
-    }
-
-    _update(params) {
-        const {size, scrollTop} = params;
-        const rowHeight = params.rowHeight;
+    _calcTopIndex() {
+        const {size, scrollTop, rowHeight} = this.props;
         let offsetTopIndex;
 
         if (isFunction(rowHeight)) {
@@ -71,11 +50,11 @@ export class Scroller extends Component {
                     break;
                 }
             }
-        } else {
-            offsetTopIndex = min(floor(scrollTop / rowHeight), size)
+
+            return offsetTopIndex;
         }
 
-        return {offsetTopIndex};
+        return min(floor(scrollTop / rowHeight), size);
     }
 
     _calcScrollTop({isBodyScroll, tableStartOffset, scrollTop}) {
@@ -83,16 +62,17 @@ export class Scroller extends Component {
     }
 
     componentWillMount() {
-        this._onScroll(this.props);
+        this._cacheRowsHeightsAndOffsets(this.props);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return !shallowEqual(this.state, nextState) || !shallowEqual(this.props, nextProps);
+    shouldComponentUpdate(nextProps) {
+        return !shallowEqual(this.props, nextProps);
     }
 
     componentWillReceiveProps(nextProps) {
-        this._cacheRowsHeightsAndOffsets(nextProps);
-        this._onScroll(nextProps);
+        if (this.props.size !== nextProps.size || this.props.rowHeight !== nextProps.rowHeight) {
+            this._cacheRowsHeightsAndOffsets(nextProps);
+        }
     }
 
     render() {
@@ -107,9 +87,10 @@ export class Scroller extends Component {
 
         const {className, style = {}} = this.props;
         const finalStyle = {...containerStyle, ...style};
+        const offsetTopIndex = this._calcTopIndex();
 
-        const from = this._calcFromIndex();
-        const to = this._calcToIndex();
+        const from = this._calcFromIndex(offsetTopIndex);
+        const to = this._calcToIndex(offsetTopIndex);
 
         return <div className={className} style={finalStyle}>
             <div style={{height: this._topPlaceholderHeight(from)}} className="Scroller__TopPlaceholder"></div>
@@ -124,9 +105,8 @@ export class Scroller extends Component {
             (child) => cloneElement(child, {from, to}, child.props.children));
     }
 
-    _calcFromIndex() {
+    _calcFromIndex(from) {
         const {buffer, viewPortHeight, rowHeight, scrollTop} = this.props;
-        let from = this.state.offsetTopIndex;
         let diff = viewPortHeight * buffer;
 
         if (isFunction(rowHeight)) {
@@ -140,11 +120,8 @@ export class Scroller extends Component {
         return max(floor((scrollTop - diff)/rowHeight), 0);
     }
 
-    _calcToIndex() {
+    _calcToIndex(to) {
         const {size, buffer, viewPortHeight, rowHeight, scrollTop} = this.props;
-        const {offsetTopIndex} = this.state;
-
-        let to = offsetTopIndex;
         let diff = viewPortHeight + viewPortHeight * buffer;
 
         if (isFunction(rowHeight)) {

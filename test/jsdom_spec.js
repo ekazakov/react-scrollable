@@ -216,6 +216,16 @@ describe('Scroller suite', function () {
 
             expect(scroller.getMountedInstance().getRowOffsetTop(10)).toBe(242);
         });
+        
+        it.skip('should correctly resize when table rows count decreases', function () {
+            const options = {...scrollerOptions, rowHeight, scrollTop: 6000};
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            const bottomPlaceholder = scroller.subTree('.Scroller__BottomPlaceholder');
+            expect(bottomPlaceholder.props.style).toEqual({height: 0}, 'wrong bottom placeholder');
+        });
     });
 
 
