@@ -1,4 +1,3 @@
-//const  jsdom = require("jsdom");
 import sd from 'skin-deep';
 import React from 'react';
 import expect from 'expect';
@@ -7,7 +6,6 @@ import {fromJS} from 'immutable';
 import {Card} from '../example/card';
 import {Scroller} from '../src/Scroller';
 import stubs from './stubs';
-import _ from 'lodash';
 
 const {max, min, ceil} = Math;
 
