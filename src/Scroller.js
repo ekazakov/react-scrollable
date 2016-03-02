@@ -40,10 +40,14 @@ export class Scroller extends Component {
     }
 
     _calcTopIndex() {
-        const {size, scrollTop, rowHeight} = this.props;
+        const {size, rowHeight, viewPortHeight} = this.props;
+        let scrollTop = this.props.scrollTop;
         let offsetTopIndex;
 
         if (isFunction(rowHeight)) {
+            if (scrollTop >= this.rowOffsets[size - 1]) {
+                scrollTop = this.rowOffsets[size -1] - viewPortHeight;
+            }
             for (let [index, offset] of this.rowOffsets.entries()) {
                 if (scrollTop < offset) {
                     offsetTopIndex = index;
@@ -57,6 +61,7 @@ export class Scroller extends Component {
         return min(floor(scrollTop / rowHeight), size);
     }
 
+    //TODO: use for scrollTop
     _calcScrollTop({isBodyScroll, tableStartOffset, scrollTop}) {
         return isBodyScroll ? max(scrollTop - tableStartOffset, 0): scrollTop;
     }
@@ -70,9 +75,7 @@ export class Scroller extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.size !== nextProps.size || this.props.rowHeight !== nextProps.rowHeight) {
-            this._cacheRowsHeightsAndOffsets(nextProps);
-        }
+        this._cacheRowsHeightsAndOffsets(nextProps);
     }
 
     render() {

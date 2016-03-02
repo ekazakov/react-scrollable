@@ -21,13 +21,22 @@
     "url": "https://github.com/ekazakov/react-scrollable/issues"
   },
   "homepage": "https://github.com/ekazakov/react-scrollable",
+  "files": [
+    "dist",
+    "lib",
+    "src"
+  ],
   "scripts": {
-    "build": "NODE_ENV=development ./node_modules/.bin/webpack --output-file react-scrollable.js",
-    "build:min": "NODE_ENV=production ./node_modules/.bin/webpack --output-file react-scrollable.min.js",
-    "build:lib": "./node_modules/.bin/babel src --out-dir lib",
-    "test": "BABEL_ENV=production ./node_modules/mocha/bin/_mocha --compilers js:babel-register --watch",
-    "test:debug": "BABEL_ENV=production devtool ./node_modules/mocha/bin/_mocha -c --watch --compilers js:babel-register",
-    "example": "./node_modules/.bin/webpack-dev-server --config ./example/webpack.config.js"
+    "build:umd": "NODE_ENV=development webpack --output-file react-scrollable.js",
+    "build:umd:min": "NODE_ENV=production webpack --output-file react-scrollable.min.js",
+    "build:lib": "babel src --out-dir lib",
+    "build": "npm run build:umd && npm run build:umd:min && npm run build:lib",
+    "test": "BABEL_ENV=production mocha --compilers js:babel-register --watch",
+    "test:debug": "BABEL_ENV=production devtool mocha -c --watch --compilers js:babel-register",
+    "test:coverage": "./node_modules/.bin/isparta cover --root src --include-all-sources --report html ./node_modules/.bin/_mocha -- --compilers e6:babel-register",
+    "example": "webpack-dev-server --config ./example/webpack.config.js",
+    "clean": "rimraf lib dist coverage",
+    "prepublish": "npm run clean && npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
@@ -40,23 +49,26 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.5.2",
     "css-loader": "^0.23.1",
+    "es6-object-assign": "^1.0.1",
     "expect": "^1.14.0",
     "faker": "^3.0.1",
     "immutable": "^3.7.6",
+    "isparta": "^4.0.0",
+    "istanbul": "^0.4.2",
     "jsdom": "^8.0.2",
     "json-loader": "^0.5.4",
     "less": "^2.6.0",
     "less-loader": "^2.2.2",
+    "lodash.delay": "^4.0.1",
+    "lodash.pick": "^4.1.0",
     "mocha": "^2.4.5",
     "react-addons-test-utils": "^0.14.7",
     "react-transform-hmr": "^1.0.2",
+    "rimraf": "^2.5.2",
     "skin-deep": "^0.14.0",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.1",
-    "es6-object-assign": "^1.0.1",
-    "lodash.delay": "^4.0.1",
-    "lodash.pick": "^4.1.0"
+    "webpack-dev-server": "^1.12.1"
   },
   "peerDependencies": {
     "react": "^0.14.7",
