@@ -36,7 +36,7 @@
     "test:coverage": "isparta cover --root src --include-all-sources --report html ./node_modules/.bin/_mocha -- --compilers e6:babel-register",
     "example": "webpack-dev-server --config ./example/webpack.config.js",
     "clean": "rimraf lib dist coverage",
-    "prepublish": "npm run clean && npm run build",
+    "prepublish": "npm run clean && npm run build && semantic-release pre",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "devDependencies": {
