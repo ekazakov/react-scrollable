@@ -1,7 +1,6 @@
 * [] More node tests
 * [] tune up linters
 * [] May be browser tests
-* [] Code coverage
 * [] Docs
 * [] Scroll spy
 * [] CI integration

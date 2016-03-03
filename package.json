@@ -2,7 +2,6 @@
   "name": "react-scrollable",
   "description": "React Scrollable",
   "main": "lib/index.js",
-  "version": "1.0.0",
   "keywords": [
     "react",
     "infinity",
@@ -31,12 +30,14 @@
     "build:umd:min": "NODE_ENV=production webpack --output-file react-scrollable.min.js",
     "build:lib": "babel src --out-dir lib",
     "build": "npm run build:umd && npm run build:umd:min && npm run build:lib",
-    "test": "BABEL_ENV=production mocha --compilers js:babel-register --watch",
+    "test": "BABEL_ENV=production mocha --compilers js:babel-register",
+    "test:watch": "npm run test --  --watch",
     "test:debug": "BABEL_ENV=production devtool mocha -c --watch --compilers js:babel-register",
-    "test:coverage": "./node_modules/.bin/isparta cover --root src --include-all-sources --report html ./node_modules/.bin/_mocha -- --compilers e6:babel-register",
+    "test:coverage": "isparta cover --root src --include-all-sources --report html ./node_modules/.bin/_mocha -- --compilers e6:babel-register",
     "example": "webpack-dev-server --config ./example/webpack.config.js",
     "clean": "rimraf lib dist coverage",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "npm run clean && npm run build",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
@@ -68,7 +69,8 @@
     "skin-deep": "^0.14.0",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.1"
+    "webpack-dev-server": "^1.12.1",
+    "semantic-release": "^4.3.5"
   },
   "peerDependencies": {
     "react": "^0.14.7",
