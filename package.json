@@ -1,6 +1,5 @@
 {
   "name": "react-scrollable",
-  "version": "1.0.0",
   "description": "React Scrollable",
   "main": "lib/index.js",
   "keywords": [
@@ -38,7 +37,8 @@
     "example": "webpack-dev-server --config ./example/webpack.config.js",
     "clean": "rimraf lib dist coverage",
     "prepublish": "npm run clean && npm run build && semantic-release pre --debug",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "commit": "git-cz"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
@@ -50,7 +50,9 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.5.2",
+    "commitizen": "^2.6.1",
     "css-loader": "^0.23.1",
+    "cz-conventional-changelog": "^1.1.5",
     "es6-object-assign": "^1.0.1",
     "expect": "^1.14.0",
     "faker": "^3.0.1",
@@ -67,11 +69,11 @@
     "react-addons-test-utils": "^0.14.7",
     "react-transform-hmr": "^1.0.2",
     "rimraf": "^2.5.2",
+    "semantic-release": "^4.3.5",
     "skin-deep": "^0.14.0",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.1",
-    "semantic-release": "^4.3.5"
+    "webpack-dev-server": "^1.12.1"
   },
   "peerDependencies": {
     "react": "^0.14.7",
@@ -79,5 +81,10 @@
   },
   "dependencies": {
     "lodash-es": "^4.5.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
   }
 }
