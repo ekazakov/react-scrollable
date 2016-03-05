@@ -33,12 +33,13 @@
     "test": "BABEL_ENV=production mocha --compilers js:babel-register",
     "test:watch": "npm run test --  --watch",
     "test:debug": "BABEL_ENV=production devtool mocha -c --watch --compilers js:babel-register",
-    "test:coverage": "isparta cover --root src --include-all-sources --report html ./node_modules/.bin/_mocha -- --compilers e6:babel-register",
+    "test:coverage": "BABEL_ENV=production isparta cover --root src --include-all-sources _mocha -- --compilers e6:babel-register",
     "example": "webpack-dev-server --config ./example/webpack.config.js",
     "clean": "rimraf lib dist coverage",
     "prepublish": "npm run clean && npm run build",
     "semantic-release": "npm run prepublish && semantic-release pre && npm publish && semantic-release post",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "report-coverage": "cat ./coverage/lcov.info | codecov"
   },
   "devDependencies": {
     "babel-cli": "6.5.1",
@@ -50,6 +51,7 @@
     "babel-preset-react": "6.5.0",
     "babel-preset-stage-0": "6.5.0",
     "babel-register": "6.5.2",
+    "codecov.io": "0.1.6",
     "commitizen": "2.6.1",
     "css-loader": "0.23.1",
     "cz-conventional-changelog": "1.1.5",
