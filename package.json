@@ -37,7 +37,7 @@
     "example": "webpack-dev-server --config ./example/webpack.config.js",
     "clean": "rimraf lib dist coverage",
     "prepublish": "npm run clean && npm run build",
-    "semantic-release": "npm run prepublish && semantic-release pre --debug && npm publish && semantic-release post",
+    "semantic-release": "npm run prepublish && semantic-release pre && npm publish && semantic-release post",
     "commit": "git-cz"
   },
   "devDependencies": {
