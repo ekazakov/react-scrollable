@@ -70,7 +70,7 @@
     "react-addons-test-utils": "^0.14.7",
     "react-transform-hmr": "^1.0.2",
     "rimraf": "^2.5.2",
-    "semantic-release": "^4.3.5",
+    "semantic-release": "6.2.0",
     "skin-deep": "^0.14.0",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.2",
