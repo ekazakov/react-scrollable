@@ -1,6 +1,6 @@
 {
   "name": "react-scrollable",
-  "version": "0.0.0-semantic-versioned",
+  "version": "1.0.0",
   "description": "React Scrollable",
   "main": "lib/index.js",
   "keywords": [
