@@ -1,7 +1,7 @@
 {
   "name": "react-scrollable",
   "description": "React Scrollable",
-  "main": "lib/index.js",
+  "main": "lib/Scrollable.js",
   "keywords": [
     "react",
     "infinity",
@@ -26,9 +26,9 @@
     "src"
   ],
   "scripts": {
-    "build:umd": "NODE_ENV=development webpack --output-file react-scrollable.js",
+    "build:umd": "NODE_ENV=production webpack --output-file react-scrollable.js",
     "build:umd:min": "NODE_ENV=production webpack --output-file react-scrollable.min.js",
-    "build:lib": "babel src --out-dir lib",
+    "build:lib": "NODE_ENV=production babel src --out-dir lib",
     "build": "npm run build:umd && npm run build:umd:min && npm run build:lib",
     "test": "BABEL_ENV=production mocha --compilers js:babel-register",
     "test:watch": "npm run test --  --watch",
