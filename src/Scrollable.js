@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import debounce from 'lodash-es/debounce';
+import throttle from 'lodash-es/throttle';
 import {Scroller} from './Scroller';
 
 export default class Scrollable extends Component {
@@ -11,7 +12,7 @@ export default class Scrollable extends Component {
             viewPortHeight: this._viewPortHeight({isBodyScroll: true}),
             scrollTop: this._scrollTop({isBodyScroll: true})
         };
-        this.onScroll = () => this._onScroll(this.props);
+        this.onScroll = throttle(() => this._onScroll(this.props), 50);
         this.onResize = () => this._onResize();
         this.debouncedUpdateSize = debounce(() => this._updateSize(this.props), 100);
     }
