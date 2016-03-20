@@ -6,6 +6,7 @@ import {fromJS} from 'immutable';
 import {Card} from '../example/card';
 import {Scroller} from '../src/Scroller';
 import stubs from './stubs';
+import _ from 'lodash';
 
 const {max, min, ceil} = Math;
 
@@ -152,6 +153,12 @@ describe('Scroller suite', function () {
             expect(topPlaceholder.props.style).toEqual({height: 60}, 'wrong top placeholder');
         });
 
+        it(`should pass visible rows range to children`, function () {
+            const options = {...scrollerOptions, scrollTop: 300};
+            const scroller = sd.shallowRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
+            const range = [30, 44];
+            expect(scroller.dive(['TableRowsSet']).getMountedInstance().props.visibleRowsRange).toEqual(range);
+        });
     });
 
     describe('Rows of the different width', function() {
@@ -247,6 +254,13 @@ describe('Scroller suite', function () {
 
             expect(topPlaceholder.props.style).toEqual({height: 3136}, 'wrong top placeholder')
             expect(bottomPlaceholder.props.style).toEqual({height: 0}, 'wrong bottom placeholder');
+        });
+
+        it(`should pass visible rows range to children`, function () {
+            const options = {...scrollerOptions, scrollTop: 300, rowHeight};
+            const scroller = sd.shallowRender(<Scroller {...options}><TableRowsSet rows={rows}/></Scroller>);
+            const range = [11, 16];
+            expect(scroller.dive(['TableRowsSet']).getMountedInstance().props.visibleRowsRange).toEqual(range);
         });
     });
 

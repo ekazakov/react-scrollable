@@ -95,18 +95,21 @@ export class Scroller extends Component {
 
         const from = this._calcFromIndex(offsetTopIndex);
         const to = this._calcToIndex(offsetTopIndex);
+        const lastVisibleIndex = this._calcLastVisibleIndex(offsetTopIndex);
+
+        const visibleRowsRange = [offsetTopIndex, lastVisibleIndex];
 
         return <div className={className} style={finalStyle}>
             <div style={{height: this._topPlaceholderHeight(from)}} className="Scroller__TopPlaceholder"></div>
-            {this._renderBody(from, to)}
+            {this._renderBody(from, to, visibleRowsRange)}
             <div style={{height: this._bottomPlaceholderHeight(this.props.size, to)}} className="Scroller__BottomPlaceholder"></div>
         </div>;
     }
 
-    _renderBody(from, to) {
+    _renderBody(from, to, visibleRowsRange) {
         return Children.map(
             this.props.children,
-            (child) => cloneElement(child, {from, to}, child.props.children));
+            (child) => cloneElement(child, {from, to, visibleRowsRange}, child.props.children));
     }
 
     _calcFromIndex(from) {
@@ -135,6 +138,21 @@ export class Scroller extends Component {
                 diff -= this.rows[to++];
             }
             return to;
+        }
+
+        return min(ceil((scrollTop + diff)/rowHeight), size);
+    }
+
+    _calcLastVisibleIndex(topIndex) {
+        const {size, viewPortHeight, rowHeight} = this.props;
+        const scrollTop = this._calcScrollTop();
+        let diff = viewPortHeight;
+
+        if (isFunction(rowHeight)) {
+            while (topIndex < size && diff > 0) {
+                diff -= this.rows[topIndex++];
+            }
+            return topIndex;
         }
 
         return min(ceil((scrollTop + diff)/rowHeight), size);
