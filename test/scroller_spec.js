@@ -133,6 +133,25 @@ describe('Scroller suite', function () {
 
             expect(scroller.getMountedInstance().getRowOffsetTop(10)).toBe(100);
         });
+
+        it(`should correctly render with offset from page top`, function () {
+            const options = {...scrollerOptions, tableStartOffset: 1000, scrollTop: 1000};
+
+            const scroller = sd.shallowRender(<Scroller {...options}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            let topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            expect(topPlaceholder.props.style).toEqual({height: 0}, 'wrong top placeholder');
+
+            scroller.reRender(<Scroller {...{...options, scrollTop: 1200}}>
+                <TableRowsSet rows={rows}/>
+            </Scroller>);
+
+            topPlaceholder = scroller.subTree('.Scroller__TopPlaceholder');
+            expect(topPlaceholder.props.style).toEqual({height: 60}, 'wrong top placeholder');
+        });
+
     });
 
     describe('Rows of the different width', function() {
@@ -295,8 +314,6 @@ describe('Scroller suite', function () {
 
         expect(tableRows.length).toEqual(16);
     });
-
-    it(`should correctly render with offset from page top`);
 
     it(`should support rowHeight as function`, function () {
         const rowHeight = (index) => 10;
