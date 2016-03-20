@@ -33,7 +33,7 @@
     "test": "BABEL_ENV=production mocha --compilers js:babel-register",
     "test:watch": "npm run test --  --watch",
     "test:debug": "BABEL_ENV=production devtool ./node_modules/.bin/_mocha -c --watch --compilers js:babel-register",
-    "test:coverage": "BABEL_ENV=production isparta cover --root src --include-all-sources ./node_modules/.bin/_mocha -- --compilers e6:babel-register",
+    "test:coverage": "BABEL_ENV=production isparta cover --root src --include-all-sources ./node_modules/.bin/mocha -- --compilers e6:babel-register",
     "example": "webpack-dev-server --config ./example/webpack.config.js",
     "clean": "rimraf lib dist coverage",
     "prepublish": "npm run clean && npm run build",
