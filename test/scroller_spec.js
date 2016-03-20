@@ -6,7 +6,6 @@ import {fromJS} from 'immutable';
 import {Card} from '../example/card';
 import {Scroller} from '../src/Scroller';
 import stubs from './stubs';
-import _ from 'lodash';
 
 const {max, min, ceil} = Math;
 
